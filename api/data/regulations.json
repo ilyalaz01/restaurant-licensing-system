@@ -1,0 +1,291 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2024-11-05",
+    "source": "Item 4.2A - Uniform Specification",
+    "focus_area": "Small to medium restaurants (under 200m²)"
+  },
+  "regulations": [
+    {
+      "id": "def_001",
+      "category": "general_definitions",
+      "subcategory": "ownership",
+      "title": "Business Owner Definition",
+      "description": "The person who holds, manages, or operates the business must be clearly identified",
+      "full_text": "Business Owner: The person who holds, manages, or operates the business, or acts under their supervision",
+      "requirements": [
+        "Clear identification of business owner",
+        "Documentation of management structure",
+        "Designated responsible person for compliance"
+      ],
+      "applicable_conditions": {
+        "business_size": "all",
+        "always_required": true
+      },
+      "priority": "critical",
+      "compliance_timeline": "before_application",
+      "estimated_cost": 0,
+      "tags": ["ownership", "legal", "mandatory"]
+    },
+    {
+      "id": "def_002",
+      "category": "general_definitions",
+      "subcategory": "professionals",
+      "title": "Certified Professional Requirements",
+      "description": "Certain documents must be signed by authorized professionals",
+      "full_text": "A person authorized under the Business Licensing Law by the Minister of the Interior, including licensed engineers and architects",
+      "requirements": [
+        "Hire certified engineer or architect",
+        "Obtain professional signatures on plans",
+        "Verify professional credentials"
+      ],
+      "applicable_conditions": {
+        "business_size": "all",
+        "when_required": "for_plans_and_diagrams"
+      },
+      "priority": "high",
+      "compliance_timeline": "during_application",
+      "estimated_cost": 5000,
+      "tags": ["professional", "documentation", "planning"]
+    },
+    {
+      "id": "cond_001",
+      "category": "cross_sectional",
+      "subcategory": "application",
+      "title": "Required Application Documents",
+      "description": "Essential documents that must be submitted with license application",
+      "full_text": "The application must include: Environmental diagram, site map, and business plan signed by a certified professional",
+      "requirements": [
+        "Environmental diagram",
+        "Site map with accurate measurements",
+        "Detailed business plan",
+        "All documents signed by certified professional"
+      ],
+      "applicable_conditions": {
+        "business_size": "all",
+        "always_required": true
+      },
+      "priority": "critical",
+      "compliance_timeline": "during_application",
+      "estimated_cost": 8000,
+      "tags": ["documentation", "application", "mandatory"]
+    },
+    {
+      "id": "cond_002",
+      "category": "cross_sectional",
+      "subcategory": "display",
+      "title": "License Display Requirement",
+      "description": "Business license must be visible to customers",
+      "full_text": "The license must be displayed publicly at the business",
+      "requirements": [
+        "Display license in visible location",
+        "Ensure license is readable",
+        "Protect license from damage"
+      ],
+      "applicable_conditions": {
+        "business_size": "all",
+        "always_required": true
+      },
+      "priority": "medium",
+      "compliance_timeline": "after_approval",
+      "estimated_cost": 100,
+      "tags": ["display", "compliance", "ongoing"]
+    },
+    {
+      "id": "cond_003",
+      "category": "cross_sectional",
+      "subcategory": "legal",
+      "title": "Criminal Offense Warning",
+      "description": "Operating without a valid license is illegal",
+      "full_text": "Operating without a license is a criminal offense",
+      "requirements": [
+        "Obtain license before operation",
+        "Maintain valid license status",
+        "Renew license on time"
+      ],
+      "applicable_conditions": {
+        "business_size": "all",
+        "always_required": true
+      },
+      "priority": "critical",
+      "compliance_timeline": "before_opening",
+      "estimated_cost": 0,
+      "tags": ["legal", "mandatory", "criminal"]
+    },
+    {
+      "id": "cond_004",
+      "category": "cross_sectional",
+      "subcategory": "changes",
+      "title": "Change Notification Requirement",
+      "description": "Must report changes that affect compliance",
+      "full_text": "The business owner must report any change that may affect compliance at least 3 months in advance",
+      "requirements": [
+        "Report ownership changes",
+        "Report size or layout changes",
+        "Report activity changes",
+        "Provide 3 months advance notice"
+      ],
+      "applicable_conditions": {
+        "business_size": "all",
+        "when_required": "when_changes_occur"
+      },
+      "priority": "high",
+      "compliance_timeline": "ongoing",
+      "estimated_cost": 0,
+      "tags": ["reporting", "changes", "ongoing"]
+    },
+    {
+      "id": "cond_005",
+      "category": "cross_sectional",
+      "subcategory": "validity",
+      "title": "License Validity Conditions",
+      "description": "Conditions that can invalidate a license",
+      "full_text": "A license becomes invalid if any details change — such as ownership, size, layout, or activity",
+      "requirements": [
+        "Maintain original business conditions",
+        "Apply for new license if changes occur",
+        "Keep license details current"
+      ],
+      "applicable_conditions": {
+        "business_size": "all",
+        "always_required": true
+      },
+      "priority": "high",
+      "compliance_timeline": "ongoing",
+      "estimated_cost": 0,
+      "tags": ["validity", "maintenance", "ongoing"]
+    },
+    {
+      "id": "cond_006",
+      "category": "cross_sectional",
+      "subcategory": "appeals",
+      "title": "Appeal Process",
+      "description": "Business owners can appeal licensing conditions",
+      "full_text": "A business owner may appeal a licensing condition, except if established by law. Appeals must be submitted within 30 days with fee of ₪323",
+      "requirements": [
+        "Submit appeal within 30 days",
+        "Use official appeal form",
+        "Pay appeal fee (₪323)",
+        "Understand appeal doesn't suspend condition"
+      ],
+      "applicable_conditions": {
+        "business_size": "all",
+        "when_required": "if_appealing_conditions"
+      },
+      "priority": "low",
+      "compliance_timeline": "within_30_days",
+      "estimated_cost": 323,
+      "tags": ["appeals", "legal", "optional"]
+    },
+    {
+      "id": "cond_007",
+      "category": "cross_sectional",
+      "subcategory": "additional",
+      "title": "Additional Activities",
+      "description": "Extra requirements for businesses with multiple activities",
+      "full_text": "If the business includes additional activities that require licensing, their respective conditions shall also apply",
+      "requirements": [
+        "Identify all business activities",
+        "Check licensing requirements for each activity",
+        "Comply with all applicable conditions"
+      ],
+      "applicable_conditions": {
+        "business_size": "all",
+        "when_required": "multiple_activities"
+      },
+      "priority": "medium",
+      "compliance_timeline": "during_application",
+      "estimated_cost": 0,
+      "tags": ["activities", "additional", "compliance"]
+    },
+    {
+      "id": "cond_008",
+      "category": "cross_sectional",
+      "subcategory": "revocation",
+      "title": "License Revocation Risk",
+      "description": "Conditions under which license can be revoked",
+      "full_text": "The authority may revoke a license for non-compliance or criminal offenses related to the business",
+      "requirements": [
+        "Maintain compliance with all conditions",
+        "Avoid criminal activities",
+        "Respond to authority requests promptly"
+      ],
+      "applicable_conditions": {
+        "business_size": "all",
+        "always_required": true
+      },
+      "priority": "high",
+      "compliance_timeline": "ongoing",
+      "estimated_cost": 0,
+      "tags": ["revocation", "compliance", "risk"]
+    }
+  ],
+  "categories": {
+    "general_definitions": {
+      "name": "General Definitions",
+      "description": "Basic terms, definitions, and fundamental requirements",
+      "icon": "📋",
+      "color": "#3B82F6"
+    },
+    "cross_sectional": {
+      "name": "Cross-Sectional Conditions",
+      "description": "General conditions that apply to all food establishments",
+      "icon": "⚖️",
+      "color": "#10B981"
+    }
+  },
+  "business_attributes": {
+    "size_ranges": [
+      { "id": "small", "label": "Small", "min": 0, "max": 50, "unit": "m²" },
+      { "id": "medium", "label": "Medium", "min": 51, "max": 100, "unit": "m²" },
+      { "id": "large", "label": "Large", "min": 101, "max": 200, "unit": "m²" }
+    ],
+    "seating_ranges": [
+      { "id": "intimate", "label": "Intimate", "min": 0, "max": 20, "unit": "seats" },
+      { "id": "standard", "label": "Standard", "min": 21, "max": 50, "unit": "seats" },
+      { "id": "large", "label": "Large", "min": 51, "max": 100, "unit": "seats" }
+    ],
+    "features": [
+      { "id": "alcohol", "label": "Serving Alcohol", "affects_regulations": true },
+      { "id": "delivery", "label": "Food Delivery Service", "affects_regulations": true },
+      { "id": "outdoor", "label": "Outdoor Seating", "affects_regulations": true },
+      { "id": "kitchen_gas", "label": "Gas Kitchen Equipment", "affects_regulations": true },
+      { "id": "live_music", "label": "Live Music/Entertainment", "affects_regulations": true }
+    ]
+  },
+  "priority_levels": {
+    "critical": {
+      "label": "Critical",
+      "description": "Must be completed before any operation",
+      "color": "#EF4444",
+      "order": 1
+    },
+    "high": {
+      "label": "High Priority",
+      "description": "Required for license approval",
+      "color": "#F59E0B",
+      "order": 2
+    },
+    "medium": {
+      "label": "Medium Priority",
+      "description": "Required but with flexible timeline",
+      "color": "#3B82F6",
+      "order": 3
+    },
+    "low": {
+      "label": "Low Priority",
+      "description": "Optional or conditional requirements",
+      "color": "#6B7280",
+      "order": 4
+    }
+  },
+  "compliance_timelines": {
+    "before_application": "Before submitting application",
+    "during_application": "During application process",
+    "before_opening": "Before opening to public",
+    "after_approval": "After license approval",
+    "within_30_days": "Within 30 days of trigger event",
+    "ongoing": "Continuous compliance required",
+    "immediate": "Immediate action required"
+  }
+}
