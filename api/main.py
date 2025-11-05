@@ -292,4 +292,4 @@ async def server_error_handler(request, exc):
     )
 
 # Vercel handler
-handler = app
+app = app
