@@ -34,7 +34,7 @@ class BusinessDetails(BaseModel):
     # Basic Information
     business_name: str = Field(..., min_length=2, max_length=100)
     owner_name: str = Field(..., min_length=2, max_length=100)
-    email: Optional[str] = Field(None, regex=r'^[\w\.-]+@[\w\.-]+\.\w+$')
+    email: Optional[str] = Field(None, pattern=r'^[\w\.-]+@[\w\.-]+\.\w+$')
     phone: Optional[str] = None
     
     # Size and Capacity
