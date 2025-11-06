@@ -1,75 +1,127 @@
 """
-Gemini AI Service
-Generates personalized licensing reports using Google Gemini AI
+Google Gemini AI Service
+Handles AI-powered report generation
 """
 
-import google.generativeai as genai
 import os
-from typing import Dict, List, Any
+import json
+from typing import Dict, List, Any, Optional
+from datetime import datetime
+import google.generativeai as genai
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class GeminiService:
-    """Service for generating AI-powered licensing reports"""
+    """Service for Google Gemini AI integration"""
     
     def __init__(self):
-        """Initialize Gemini with API key"""
-        api_key = os.getenv('GEMINI_API_KEY')
-        if api_key:
-            genai.configure(api_key=api_key)
-            self.model = genai.GenerativeModel('gemini-pro')
+        """Initialize Gemini service"""
+        self.api_key = os.getenv('GEMINI_API_KEY')
+        self.model_name = 'gemini-1.5-flash'
+        self.mock_mode = False
+        
+        if not self.api_key:
+            print("⚠️ Gemini API key not found - using mock mode")
+            self.mock_mode = True
         else:
-            self.model = None
+            try:
+                genai.configure(api_key=self.api_key)
+                self.model = genai.GenerativeModel(self.model_name)
+            except Exception as e:
+                print(f"Error initializing Gemini: {e}")
+                self.mock_mode = True
+    
+    def _generate_documentation_list(self, business: Any, regulations: List[Dict]) -> List[str]:
+        """Generate simple list of required documents"""
+        docs = [
+            "Business license application form",
+            "Property lease or ownership proof",
+            "Architectural plans signed by certified engineer",
+            "Fire safety certificate",
+            "Health department approval",
+            "Environmental impact assessment",
+            "Owner's ID and company registration",
+            "Insurance certificates"
+        ]
+        
+        # Add feature-specific documents
+        if 'alcohol' in business.features:
+            docs.append("Alcohol serving permit application")
+        if 'outdoor' in business.features:
+            docs.append("Outdoor seating municipal permit")
+        if 'kitchen_gas' in business.features:
+            docs.append("Gas installation safety certificate")
+        if 'live_music' in business.features:
+            docs.append("Entertainment venue license")
+        
+        return docs[:12]  # Limit to 12 items
+
+    def _generate_next_steps(self, business: Any, regulations: List[Dict]) -> List[str]:
+        """Generate actionable next steps"""
+        steps = [
+            "1. Hire a licensed engineer or architect to prepare required documentation (site maps, environmental diagrams, business plan)",
+            "2. Contact your local municipal licensing authority to obtain the application forms",
+            "3. Schedule initial consultations with Ministry of Health and Fire Department",
+            "4. Gather all ownership/lease documents and company registration papers"
+        ]
+        
+        # Add feature-specific steps
+        if 'kitchen_gas' in business.features:
+            steps.append("5. Contact a licensed gas installer for kitchen gas system inspection and certification")
+        
+        if business.size_category == "large" or business.seating_category == "large":
+            steps.append(f"{len(steps)+1}. Schedule Fire and Rescue Authority full inspection (required for establishments over 50 sqm or 50 seats)")
+        
+        if 'outdoor' in business.features:
+            steps.append(f"{len(steps)+1}. Submit outdoor seating area plans to municipality for approval")
+        
+        steps.append(f"{len(steps)+1}. Compile all documents and submit complete application to licensing authority")
+        steps.append(f"{len(steps)+1}. Follow up with authorities weekly and respond promptly to any additional requests")
+        
+        return steps[:8]  # Limit to 8 steps
+
+    def _estimate_timeline(self, business: Any, regulations: List[Dict]) -> str:
+        """Estimate completion timeline"""
+        base_months = 2
+        
+        if business.size_sqm > 150:
+            base_months += 1
+        if len(business.features) > 2:
+            base_months += 0.5
+        if not business.existing_business:
+            base_months += 1
+        
+        months = int(base_months)
+        
+        if months <= 2:
+            return "1-2 months (simplified process with basic requirements)"
+        elif months <= 3:
+            return "2-3 months (standard process with typical requirements)"
+        else:
+            return "3-4 months (complex case with multiple requirements)"
     
     def check_connection(self) -> bool:
-        """Check if Gemini is configured"""
-        return self.model is not None
+        """Check if Gemini service is available"""
+        return not self.mock_mode
     
     async def generate_report(self, business_details: Any, matched_regulations: List[Dict], regenerate: bool = False) -> Dict[str, Any]:
         """
-        Generate comprehensive licensing report using AI
-        
-        Args:
-            business_details: Business information
-            matched_regulations: List of applicable regulations
-            regenerate: Whether this is a regeneration
-        
-        Returns:
-            Complete report dictionary with all sections
+        Generate AI-powered report based on business details and regulations
         """
         
-        if not self.model:
-            return self._generate_fallback_report(business_details, matched_regulations)
+        if self.mock_mode:
+            return self._generate_mock_report(business_details, matched_regulations)
         
         try:
-            # Generate AI summary
-            ai_summary = await self._generate_ai_summary(business_details, matched_regulations)
+            # Build the prompt
+            prompt = self._build_comprehensive_prompt(business_details, matched_regulations)
             
-            # Extract required documents from regulations
-            required_documents = self._extract_required_documents(matched_regulations)
+            # Generate content using Gemini
+            response = self.model.generate_content(prompt)
             
-            # Generate next steps
-            next_steps = self._generate_next_steps(business_details, matched_regulations)
-            
-            # Build complete report
-            report = {
-                "summary": ai_summary,
-                "business": {
-                    "business_name": business_details.business_name,
-                    "owner_name": business_details.owner_name,
-                    "size_sqm": business_details.size_sqm,
-                    "seating_capacity": business_details.seating_capacity,
-                    "size_category": business_details.size_category,
-                    "seating_category": business_details.seating_category,
-                    "features": business_details.features,
-                    "location_city": business_details.location_city if hasattr(business_details, 'location_city') else None,
-                },
-                "matched_regulations": matched_regulations,
-                "required_documents": required_documents,
-                "next_steps": next_steps,
-                "priority_summary": self._generate_priority_summary(matched_regulations),
-                "estimated_timeline": self._estimate_timeline(matched_regulations),
-                "ai_generated": True,
-                "regenerated": regenerate
-            }
+            # Parse and structure the response
+            report = self._parse_ai_response(response.text, business_details, matched_regulations)
             
             return report
             
@@ -77,181 +129,286 @@ class GeminiService:
             print(f"Error generating AI report: {e}")
             return self._generate_fallback_report(business_details, matched_regulations)
     
-    async def _generate_ai_summary(self, business_details: Any, regulations: List[Dict]) -> str:
-        """Generate AI-powered summary of licensing requirements"""
+    def _build_comprehensive_prompt(self, business: Any, regulations: List[Dict]) -> str:
+        """Build a comprehensive prompt for Gemini"""
         
-        # Build prompt for Gemini
-        prompt = self._build_prompt(business_details, regulations)
+        # Extract key business details
+        features_text = ", ".join(business.features) if business.features else "None specified"
         
-        try:
-            response = self.model.generate_content(prompt)
-            return response.text
-        except Exception as e:
-            print(f"Error calling Gemini API: {e}")
-            return self._generate_fallback_summary(business_details, regulations)
-    
-    def _build_prompt(self, business: Any, regulations: List[Dict]) -> str:
-        """Build detailed prompt for AI"""
+        # Summarize regulations
+        critical_regs = [r for r in regulations if r.get('priority') == 'critical']
+        high_regs = [r for r in regulations if r.get('priority') == 'high']
         
-        # Business characteristics
-        features_str = ", ".join(business.features) if business.features else "none"
+        prompt = f"""
+        You are an expert business licensing consultant in Israel, helping restaurant owners navigate complex regulations.
         
-        # Regulations summary
-        critical_regs = [r for r in regulations if r.get("priority") == "critical"]
-        high_regs = [r for r in regulations if r.get("priority") == "high"]
+        BUSINESS PROFILE:
+        - Business Name: {business.business_name}
+        - Owner: {business.owner_name}
+        - Size: {business.size_sqm} square meters ({business.size_category})
+        - Seating Capacity: {business.seating_capacity} seats ({business.seating_category})
+        - Special Features: {features_text}
+        - New Business: {'Yes' if not business.existing_business else 'No, existing business'}
+        - Previous License: {'Yes' if business.previous_license else 'No'}
         
-        prompt = f"""You are a licensing expert in Israel helping a restaurant owner understand their licensing requirements.
-
-Business Details:
-- Name: {business.business_name}
-- Size: {business.size_sqm} square meters ({business.size_category} establishment)
-- Seating Capacity: {business.seating_capacity} seats ({business.seating_category} capacity)
-- Features: {features_str}
-- Location: {getattr(business, 'location_city', 'Not specified')}
-
-Applicable Regulations:
-- {len(critical_regs)} critical requirements
-- {len(high_regs)} high priority requirements
-- {len(regulations)} total regulations apply
-
-Key Regulations:
-{self._format_regulations_for_prompt(regulations[:5])}
-
-Task:
-Write a clear, professional summary (150-200 words) that:
-1. Acknowledges the specific business characteristics
-2. Highlights the most critical requirements (2-3 main points)
-3. Explains what makes this business's licensing process unique
-4. Provides encouraging but realistic timeline expectations
-5. Uses accessible language (not legal jargon)
-
-Write in second person ("your restaurant", "you will need to").
-Be specific and actionable.
-"""
+        APPLICABLE REGULATIONS:
+        Critical Requirements ({len(critical_regs)} items):
+        {self._format_regulations(critical_regs[:5])}
+        
+        High Priority Requirements ({len(high_regs)} items):
+        {self._format_regulations(high_regs[:5])}
+        
+        TASK: Generate a comprehensive, actionable licensing report that:
+        
+        1. EXECUTIVE SUMMARY (2-3 sentences)
+           - Overview of what this business needs to do
+           - Estimated timeline and complexity
+        
+        2. IMMEDIATE ACTIONS (Top 3-5 urgent steps)
+           - What must be done first
+           - Who to contact
+           - Estimated time for each
+        
+        3. DOCUMENTATION CHECKLIST
+           - Required documents
+           - Where to obtain them
+           - Approximate costs
+        
+        4. TIMELINE ROADMAP
+           - Week 1: Initial steps
+           - Week 2-4: Documentation gathering
+           - Month 2-3: Submissions and follow-ups
+        
+        5. COST BREAKDOWN
+           - Government fees
+           - Professional services
+           - Other expenses
+           - Total estimate range
+        
+        6. PROFESSIONAL TIPS
+           - Common mistakes to avoid
+           - Money-saving opportunities
+           - Expediting strategies
+        
+        7. SPECIAL CONSIDERATIONS
+           - Based on the specific features of this business
+           - Any advantages due to size/type
+        
+        IMPORTANT INSTRUCTIONS:
+        - Use clear, simple language (avoid legal jargon)
+        - Be specific and actionable (not generic advice)
+        - Consider the Israeli context and local requirements
+        - Prioritize by urgency and importance
+        - Include realistic timeframes
+        - Mention relevant authorities (Municipality, Fire Department, Health Ministry)
+        
+        Format the response with clear headers and bullet points for easy reading.
+        Keep the tone professional but friendly and encouraging.
+        """
         
         return prompt
     
-    def _format_regulations_for_prompt(self, regulations: List[Dict]) -> str:
-        """Format regulations for inclusion in prompt"""
+    
+
+
+    def _format_regulations(self, regulations: List[Dict]) -> str:
+        """Format regulations for the prompt"""
+        if not regulations:
+            return "- No specific regulations in this category"
+        
         formatted = []
         for reg in regulations:
-            formatted.append(f"- {reg.get('title', 'Unnamed')}: {reg.get('description', '')[:100]}...")
+            formatted.append(f"- {reg.get('title', 'Unknown')}: {reg.get('description', '')[:100]}")
+        
         return "\n".join(formatted)
     
-    def _generate_fallback_summary(self, business: Any, regulations: List[Dict]) -> str:
-        """Generate summary without AI (fallback)"""
+    def _parse_ai_response(self, ai_text: str, business: Any, regulations: List[Dict]) -> Dict[str, Any]:
+        """Parse AI response into structured report"""
         
-        features_text = ", ".join(business.features) if business.features else "no special features"
-        critical_count = len([r for r in regulations if r.get("priority") == "critical"])
+        # Calculate total estimated costs
+        total_cost = sum(reg.get('estimated_cost', 0) for reg in regulations)
         
-        summary = f"""Based on your restaurant "{business.business_name}" with {business.size_sqm} sqm and {business.seating_capacity} seats featuring {features_text}, we've identified {len(regulations)} applicable regulations.
-
-Your establishment is classified as {business.size_category} size with {business.seating_category} seating capacity. You have {critical_count} critical requirements that must be completed before opening.
-
-Key requirements include obtaining certified professional signatures for your business plan, Ministry of Health approval for food safety, and Fire and Rescue Authority clearance. {"Your selected features ("+", ".join(business.features)+") require additional specific approvals." if business.features else ""}
-
-The licensing process typically takes 2-4 months depending on your preparation and local authority responsiveness. We recommend starting with the critical requirements and working with a licensed professional to ensure all documentation is complete."""
+        # Create structured report
+        report = {
+        # Frontend expects "summary" not "executive_summary"
+        "summary": self._extract_section(ai_text, "EXECUTIVE SUMMARY", "executive", ai_text[:300]),
         
-        return summary
+        # Frontend expects "business" object with all details
+        "business": {
+            "business_name": business.business_name,
+            "owner_name": business.owner_name,
+            "size_sqm": business.size_sqm,
+            "seating_capacity": business.seating_capacity,
+            "size_category": business.size_category,
+            "seating_category": business.seating_category,
+            "features": business.features,
+            "location_city": getattr(business, 'location_city', None),
+            "email": getattr(business, 'email', None),
+            "phone": getattr(business, 'phone', None)
+        },
+        
+        # Frontend expects "matched_regulations" array
+        "matched_regulations": regulations,
+        
+        # Frontend expects "required_documents" array
+        "required_documents": self._generate_documentation_list(business, regulations),
+        
+        # Frontend expects "next_steps" array
+        "next_steps": self._generate_next_steps(business, regulations),
+        
+        # Additional data
+        "priority_summary": {
+            "critical": len([r for r in regulations if r.get('priority') == 'critical']),
+            "high": len([r for r in regulations if r.get('priority') == 'high']),
+            "medium": len([r for r in regulations if r.get('priority') == 'medium']),
+            "low": len([r for r in regulations if r.get('priority') == 'low'])
+        },
+        
+        "estimated_timeline": self._estimate_timeline(business, regulations),
+        "estimated_cost": total_cost,
+        
+        "ai_generated": True,
+        "regenerated": False
+    }
+        
+        return report
     
-    def _extract_required_documents(self, regulations: List[Dict]) -> List[str]:
-        """Extract list of required documents from regulations"""
+    def _extract_section(self, text: str, header: str, keywords: str, default: str = "") -> str:
+        """Extract section from AI response"""
+        import re
         
-        documents = set()
+        # Try to find section by header
+        header_pattern = rf"{header}.*?(?=\n[A-Z]+:|\Z)"
+        match = re.search(header_pattern, text, re.DOTALL | re.IGNORECASE)
+        if match:
+            return match.group(0).replace(header, "").strip()[:500]
         
-        # Standard documents for all
-        documents.add("Business license application form")
-        documents.add("Site map signed by certified professional")
-        documents.add("Environmental diagram signed by certified professional")
-        documents.add("Comprehensive business plan")
-        documents.add("Proof of ownership or lease agreement")
-        documents.add("Owner's ID and company registration")
+        # Fallback to keyword search
+        keyword_pattern = rf".*({keywords}).*"
+        matches = re.findall(keyword_pattern, text, re.IGNORECASE)
+        if matches:
+            return " ".join(matches[:2])[:500]
         
-        # Extract from regulations
-        for reg in regulations:
-            requirements = reg.get("requirements", [])
-            for req in requirements:
-                if any(keyword in req.lower() for keyword in ["certificate", "approval", "license", "permit", "signed", "document"]):
-                    documents.add(req)
-        
-        return sorted(list(documents))[:12]  # Limit to 12 most important
+        return default or "Please refer to the detailed requirements listed below."
     
-    def _generate_next_steps(self, business: Any, regulations: List[Dict]) -> List[str]:
-        """Generate actionable next steps"""
+    def _generate_action_items(self, regulations: List[Dict], priority: str) -> List[Dict]:
+        """Generate action items from regulations"""
+        filtered = [r for r in regulations if r.get('priority') == priority][:5]
         
-        steps = []
-        
-        # Step 1: Always start with professional
-        steps.append("Hire a licensed engineer or architect to prepare required documentation (site maps, environmental diagrams, business plan)")
-        
-        # Step 2: Based on features
-        if "kitchen_gas" in business.features:
-            steps.append("Contact licensed gas installer for kitchen gas system inspection and certification")
-        
-        # Step 3: Fire safety
-        if business.size_category == "small":
-            steps.append("Prepare fire safety affidavit with certified professional (for small establishments)")
-        else:
-            steps.append("Schedule Fire and Rescue Authority inspection for your establishment")
-        
-        # Step 4: Health
-        steps.append("Contact Ministry of Health district office to schedule kitchen and facilities inspection")
-        
-        # Step 5: Special features
-        if "alcohol" in business.features:
-            steps.append("Verify alcohol serving license requirements with local licensing authority")
-        
-        if "outdoor" in business.features:
-            steps.append("Obtain municipal approval for outdoor seating area including measurements and safety compliance")
-        
-        if "live_music" in business.features:
-            steps.append("Prepare documentation for entertainment venue requirements including sound system safety")
-        
-        # Step 6: Application
-        steps.append("Compile all documents and submit complete application to local licensing authority")
-        
-        # Step 7: Follow-up
-        steps.append("Schedule follow-up meetings with authorities as needed and respond promptly to any requests")
-        
-        # Step 8: Final
-        steps.append("Once approved, display your business license prominently at the entrance")
-        
-        return steps[:8]  # Limit to 8 steps
+        return [
+            {
+                "id": reg.get('id'),
+                "title": reg.get('title'),
+                "description": reg.get('description'),
+                "deadline": "Immediate" if priority == "critical" else "Within 30 days",
+                "completed": False
+            }
+            for reg in filtered
+        ]
     
-    def _generate_priority_summary(self, regulations: List[Dict]) -> Dict[str, int]:
-        """Count regulations by priority"""
+    def _generate_documentation_checklist(self, business: Any, regulations: List[Dict]) -> List[Dict]:
+        """Generate documentation checklist"""
+        checklist = [
+            {"item": "Business registration documents", "required": True, "obtained": False},
+            {"item": "Property lease or ownership proof", "required": True, "obtained": False},
+            {"item": "Architectural plans signed by engineer", "required": True, "obtained": False},
+            {"item": "Environmental impact assessment", "required": business.size_sqm > 100, "obtained": False},
+            {"item": "Fire safety certificate", "required": True, "obtained": False},
+            {"item": "Health department approval", "required": True, "obtained": False},
+        ]
         
-        summary = {
-            "critical": 0,
-            "high": 0,
-            "medium": 0,
-            "low": 0
+        # Add feature-specific documents
+        if 'alcohol' in business.features:
+            checklist.append({"item": "Alcohol serving permit", "required": True, "obtained": False})
+        if 'outdoor' in business.features:
+            checklist.append({"item": "Outdoor seating permit", "required": True, "obtained": False})
+        if 'live_music' in business.features:
+            checklist.append({"item": "Entertainment license", "required": True, "obtained": False})
+        
+        return checklist
+    
+    def _generate_timeline_milestones(self, business: Any) -> List[Dict]:
+        """Generate timeline milestones"""
+        base_date = datetime.now()
+        
+        milestones = [
+            {
+                "phase": "Preparation",
+                "duration": "Week 1",
+                "tasks": ["Gather initial documents", "Contact professionals", "Review requirements"]
+            },
+            {
+                "phase": "Documentation",
+                "duration": "Weeks 2-4",
+                "tasks": ["Obtain architectural plans", "Complete applications", "Collect certificates"]
+            },
+            {
+                "phase": "Submission",
+                "duration": "Month 2",
+                "tasks": ["Submit application", "Pay fees", "Schedule inspections"]
+            },
+            {
+                "phase": "Review & Approval",
+                "duration": "Month 2-3",
+                "tasks": ["Respond to queries", "Complete inspections", "Receive license"]
+            }
+        ]
+        
+        return milestones
+    
+    def _generate_cost_breakdown(self, regulations: List[Dict]) -> Dict[str, int]:
+        """Generate cost breakdown"""
+        breakdown = {
+            "government_fees": 2500,
+            "professional_services": 8000,
+            "inspections": 1500,
+            "documentation": 500,
+            "other": 1000
         }
         
+        # Add regulation-specific costs
         for reg in regulations:
-            priority = reg.get("priority", "low")
-            summary[priority] = summary.get(priority, 0) + 1
+            if reg.get('estimated_cost', 0) > 0:
+                breakdown['regulatory_compliance'] = breakdown.get('regulatory_compliance', 0) + reg['estimated_cost']
         
-        return summary
+        return breakdown
     
-    def _estimate_timeline(self, regulations: List[Dict]) -> str:
-        """Estimate timeline based on regulations"""
+    def _estimate_total_days(self, business: Any, regulations: List[Dict]) -> int:
+        """Estimate total days to completion"""
+        base_days = 60
         
-        critical_count = len([r for r in regulations if r.get("priority") == "critical"])
-        total_count = len(regulations)
+        # Adjust based on business complexity
+        if business.size_sqm > 150:
+            base_days += 15
+        if len(business.features) > 3:
+            base_days += 10
+        if not business.existing_business:
+            base_days += 20
         
-        if critical_count >= 6 or total_count >= 12:
-            return "3-4 months (complex case with multiple requirements)"
-        elif critical_count >= 4 or total_count >= 8:
-            return "2-3 months (standard process with typical requirements)"
+        return base_days
+    
+    def _calculate_complexity_score(self, business: Any, regulations: List[Dict]) -> str:
+        """Calculate complexity score"""
+        score = len(regulations) * 2
+        score += len(business.features) * 5
+        
+        if business.size_sqm > 150:
+            score += 10
+        if not business.previous_license:
+            score += 15
+        
+        if score < 30:
+            return "Low"
+        elif score < 60:
+            return "Medium"
         else:
-            return "1-2 months (simplified process with basic requirements)"
+            return "High"
     
-    def _generate_fallback_report(self, business: Any, regulations: List[Dict]) -> Dict[str, Any]:
-        """Generate complete report without AI"""
-        
+    def _generate_mock_report(self, business: Any, regulations: List[Dict]) -> Dict[str, Any]:
+        """Generate mock report for testing without API key"""
         return {
-            "summary": self._generate_fallback_summary(business, regulations),
+            "summary": f"This is a mock report for {business.business_name}. Based on your business size ({business.size_sqm} sqm) and features, you'll need to complete approximately {len(regulations)} regulatory requirements.",
+            
             "business": {
                 "business_name": business.business_name,
                 "owner_name": business.owner_name,
@@ -259,14 +416,57 @@ The licensing process typically takes 2-4 months depending on your preparation a
                 "seating_capacity": business.seating_capacity,
                 "size_category": business.size_category,
                 "seating_category": business.seating_category,
-                "features": business.features,
-                "location_city": getattr(business, 'location_city', None),
+                "features": business.features
             },
+            
             "matched_regulations": regulations,
-            "required_documents": self._extract_required_documents(regulations),
+            "required_documents": self._generate_documentation_list(business, regulations),
             "next_steps": self._generate_next_steps(business, regulations),
-            "priority_summary": self._generate_priority_summary(regulations),
-            "estimated_timeline": self._estimate_timeline(regulations),
+            
+            "priority_summary": {
+                "critical": len([r for r in regulations if r.get('priority') == 'critical']),
+                "high": len([r for r in regulations if r.get('priority') == 'high']),
+                "medium": len([r for r in regulations if r.get('priority') == 'medium']),
+                "low": len([r for r in regulations if r.get('priority') == 'low'])
+            },
+            
+            "estimated_timeline": "2-3 months",
             "ai_generated": False,
-            "regenerated": False
+            "mock_mode": True
         }
+    
+    def _generate_fallback_report(self, business: Any, regulations: List[Dict]) -> Dict[str, Any]:
+        """Generate fallback report when AI generation fails"""
+        return {
+            "summary": (
+                f"This fallback report summarizes the key regulatory requirements for {business.business_name}. "
+                f"Based on your business size ({business.size_sqm} sqm) and characteristics, approximately "
+                f"{len(regulations)} requirements are expected to apply."
+            ),
+
+            "business": {
+                "business_name": business.business_name,
+                "owner_name": business.owner_name,
+                "size_sqm": business.size_sqm,
+                "seating_capacity": business.seating_capacity,
+                "size_category": business.size_category,
+                "seating_category": business.seating_category,
+                "features": business.features
+            },
+
+            "matched_regulations": regulations,
+            "required_documents": self._generate_documentation_list(business, regulations),
+            "next_steps": self._generate_next_steps(business, regulations),
+
+            "priority_summary": {
+                "critical": len([r for r in regulations if r.get('priority') == 'critical']),
+                "high": len([r for r in regulations if r.get('priority') == 'high']),
+                "medium": len([r for r in regulations if r.get('priority') == 'medium']),
+                "low": len([r for r in regulations if r.get('priority') == 'low'])
+            },
+
+            "estimated_timeline": "2-3 months",
+            "ai_generated": False,
+            "fallback_mode": True
+        }
+
