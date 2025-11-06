@@ -1,7 +1,7 @@
 """
 Restaurant Licensing Assessment System - Backend API
-FastAPI application for Vercel deployment - PRODUCTION VERSION
-All imports verified working!
+HYBRID VERSION: Imports at top, lazy initialization
+This prevents crashes from service initialization at module level
 """
 
 from fastapi import FastAPI, HTTPException, Body
@@ -18,11 +18,11 @@ from pathlib import Path
 current_dir = Path(__file__).parent
 sys.path.insert(0, str(current_dir))
 
-# Load environment variables
+# Load environment variables FIRST
 from dotenv import load_dotenv
 load_dotenv()
 
-# Import services
+# Import service CLASSES (not instances)
 from services.gemini_service import GeminiService
 from services.matching_engine import MatchingEngine
 from services.firebase_service import FirebaseService
@@ -41,20 +41,46 @@ app = FastAPI(
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify your Vercel domain
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Initialize services
-gemini_service = GeminiService()
-matching_engine = MatchingEngine()
-firebase_service = FirebaseService()
+# Service instances (initialized on first use)
+_gemini_service = None
+_matching_engine = None
+_firebase_service = None
+_regulations_data = None
 
-# Load regulations data
-def load_regulations():
-    """Load regulations from JSON file"""
+def get_gemini_service():
+    """Get or create Gemini service instance"""
+    global _gemini_service
+    if _gemini_service is None:
+        _gemini_service = GeminiService()
+    return _gemini_service
+
+def get_matching_engine():
+    """Get or create matching engine instance"""
+    global _matching_engine
+    if _matching_engine is None:
+        _matching_engine = MatchingEngine()
+    return _matching_engine
+
+def get_firebase_service():
+    """Get or create Firebase service instance"""
+    global _firebase_service
+    if _firebase_service is None:
+        _firebase_service = FirebaseService()
+    return _firebase_service
+
+def get_regulations():
+    """Get or load regulations data"""
+    global _regulations_data
+    
+    if _regulations_data is not None:
+        return _regulations_data
+    
     paths_to_try = [
         current_dir / 'data' / 'regulations.json',
         Path('data/regulations.json'),
@@ -65,14 +91,13 @@ def load_regulations():
         try:
             if path.exists():
                 with open(path, 'r', encoding='utf-8') as f:
-                    return json.load(f)
+                    _regulations_data = json.load(f)
+                    return _regulations_data
         except Exception as e:
             continue
     
     print(f"Warning: regulations.json not found", file=sys.stderr)
     return None
-
-regulations_data = load_regulations()
 
 # ============= API ENDPOINTS =============
 
@@ -94,53 +119,64 @@ async def root():
 @app.get("/api/health")
 async def health_check():
     """Health check endpoint"""
+    
+    # Initialize services on demand
+    gemini = get_gemini_service()
+    firebase = get_firebase_service()
+    regulations = get_regulations()
+    
     return {
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
         "services": {
-            "database": firebase_service.check_connection(),
-            "ai": gemini_service.check_connection(),
-            "regulations": regulations_data is not None
+            "database": firebase.check_connection() if firebase else False,
+            "ai": gemini.check_connection() if gemini else False,
+            "regulations": regulations is not None
         }
     }
 
 @app.post("/api/questionnaire/submit")
 async def submit_questionnaire(submission: QuestionnaireSubmission):
-    """
-    Submit business questionnaire and generate report
-    """
+    """Submit business questionnaire and generate report"""
+    
+    # Get service instances
+    gemini = get_gemini_service()
+    matching = get_matching_engine()
+    firebase = get_firebase_service()
+    regulations = get_regulations()
+    
     try:
         # Calculate business categories
         business_details = submission.business_details.calculate_categories()
         
         # Save business to Firebase
-        business_result = await firebase_service.save_business(business_details.dict())
+        business_result = await firebase.save_business(business_details.dict())
         if not business_result["success"]:
             raise HTTPException(status_code=500, detail="Failed to save business data")
         
         business_id = business_result["businessId"]
         
-        # Match regulations based on business details
-        matched_regulations = matching_engine.match_regulations(
+        # Match regulations
+        matched_regulations = matching.match_regulations(
             business_details,
-            regulations_data["regulations"] if regulations_data else []
+            regulations.get("regulations", []) if regulations else []
         )
         
         # Generate AI report
-        ai_report = await gemini_service.generate_report(
+        ai_report = await gemini.generate_report(
             business_details,
             matched_regulations
         )
         
-        # Save report to Firebase
-        report_result = await firebase_service.save_report(ai_report, business_id)
+        # Save report
+        report_result = await firebase.save_report(ai_report, business_id)
         if not report_result["success"]:
             raise HTTPException(status_code=500, detail="Failed to save report")
         
         report_id = report_result["reportId"]
         
         # Track analytics
-        await firebase_service.track_event("questionnaire_submitted", {
+        await firebase.track_event("questionnaire_submitted", {
             "business_size": business_details.size_category,
             "seating_capacity": business_details.seating_category,
             "features_count": len(business_details.features)
@@ -166,12 +202,12 @@ async def submit_questionnaire(submission: QuestionnaireSubmission):
 
 @app.get("/api/report/{report_id}")
 async def get_report(report_id: str):
-    """
-    Get generated report by ID
-    """
+    """Get generated report by ID"""
+    
+    firebase = get_firebase_service()
+    
     try:
-        # Get report from Firebase
-        report_result = await firebase_service.get_report(report_id)
+        report_result = await firebase.get_report(report_id)
         
         if not report_result["success"]:
             raise HTTPException(status_code=404, detail="Report not found")
@@ -180,18 +216,18 @@ async def get_report(report_id: str):
         
         # Get associated business data
         if "businessId" in report_data:
-            business_result = await firebase_service.get_business(report_data["businessId"])
+            business_result = await firebase.get_business(report_data["businessId"])
             if business_result["success"]:
                 report_data["business"] = business_result["data"]
         
         # Track view
-        await firebase_service.track_event("report_viewed", {"report_id": report_id})
+        await firebase.track_event("report_viewed", {"report_id": report_id})
         
         return {
             "success": True,
             "report": report_data,
             "generated_at": report_data.get("generatedAt"),
-            "expires_at": report_data.get("generatedAt", 0) + (30 * 24 * 60 * 60 * 1000)  # 30 days
+            "expires_at": report_data.get("generatedAt", 0) + (30 * 24 * 60 * 60 * 1000)
         }
         
     except HTTPException:
@@ -201,21 +237,22 @@ async def get_report(report_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/regulations")
-async def get_regulations():
-    """
-    Get all regulations data
-    """
+async def get_regulations_endpoint():
+    """Get all regulations data"""
+    
+    regulations = get_regulations()
+    
     try:
-        if not regulations_data:
+        if not regulations:
             raise HTTPException(status_code=500, detail="Regulations data not available")
         
         return {
             "success": True,
-            "regulations": regulations_data.get("regulations", []),
-            "categories": regulations_data.get("categories", {}),
-            "business_attributes": regulations_data.get("business_attributes", {}),
-            "priority_levels": regulations_data.get("priority_levels", {}),
-            "total_count": len(regulations_data.get("regulations", []))
+            "regulations": regulations.get("regulations", []),
+            "categories": regulations.get("categories", {}),
+            "business_attributes": regulations.get("business_attributes", {}),
+            "priority_levels": regulations.get("priority_levels", {}),
+            "total_count": len(regulations.get("regulations", []))
         }
         
     except Exception as e:
@@ -224,17 +261,18 @@ async def get_regulations():
 
 @app.get("/api/regulations/categories")
 async def get_regulation_categories():
-    """
-    Get regulation categories
-    """
+    """Get regulation categories"""
+    
+    regulations = get_regulations()
+    
     try:
-        if not regulations_data:
+        if not regulations:
             raise HTTPException(status_code=500, detail="Regulations data not available")
         
         return {
             "success": True,
-            "categories": regulations_data.get("categories", {}),
-            "attributes": regulations_data.get("business_attributes", {})
+            "categories": regulations.get("categories", {}),
+            "attributes": regulations.get("business_attributes", {})
         }
         
     except Exception as e:
@@ -243,9 +281,13 @@ async def get_regulation_categories():
 
 @app.post("/api/report/regenerate")
 async def regenerate_report(data: Dict[str, Any] = Body(...)):
-    """
-    Regenerate report with updated parameters
-    """
+    """Regenerate report with updated parameters"""
+    
+    gemini = get_gemini_service()
+    matching = get_matching_engine()
+    firebase = get_firebase_service()
+    regulations = get_regulations()
+    
     try:
         report_id = data.get("report_id")
         business_id = data.get("business_id")
@@ -254,7 +296,7 @@ async def regenerate_report(data: Dict[str, Any] = Body(...)):
             raise HTTPException(status_code=400, detail="Missing required parameters")
         
         # Get business details
-        business_result = await firebase_service.get_business(business_id)
+        business_result = await firebase.get_business(business_id)
         if not business_result["success"]:
             raise HTTPException(status_code=404, detail="Business not found")
         
@@ -262,20 +304,20 @@ async def regenerate_report(data: Dict[str, Any] = Body(...)):
         business_details = BusinessDetails(**business_data)
         
         # Re-match regulations
-        matched_regulations = matching_engine.match_regulations(
+        matched_regulations = matching.match_regulations(
             business_details,
-            regulations_data["regulations"] if regulations_data else []
+            regulations.get("regulations", []) if regulations else []
         )
         
         # Generate new AI report
-        ai_report = await gemini_service.generate_report(
+        ai_report = await gemini.generate_report(
             business_details,
             matched_regulations,
             regenerate=True
         )
         
-        # Update report in Firebase
-        update_result = await firebase_service.update_report(report_id, ai_report)
+        # Update report
+        update_result = await firebase.update_report(report_id, ai_report)
         
         if not update_result["success"]:
             raise HTTPException(status_code=500, detail="Failed to update report")
