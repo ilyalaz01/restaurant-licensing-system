@@ -326,4 +326,4 @@ async def server_error_handler(request, exc):
         }
     )
 
-# No Mangum! Vercel handles ASGI natively
+# full version, hope vercel will trigger.
