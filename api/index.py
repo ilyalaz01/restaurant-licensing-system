@@ -1,11 +1,19 @@
 """
-Super minimal working Python API for Vercel .
+Step-by-step diagnostic to find what's breaking
 """
-
 from http.server import BaseHTTPRequestHandler
 import json
-from datetime import datetime
 
+# Uncomment these ONE AT A TIME to find what breaks:
+
+# Step 1: Test if FastAPI import works
+# from fastapi import FastAPI
+
+# Step 2: Test if your services import works  
+# from services import gemini_service
+
+# Step 3: Test if Firebase import works
+# import firebase_admin
 
 class handler(BaseHTTPRequestHandler):
     def _send_json(self, data: dict, code: int = 200):
@@ -16,23 +24,10 @@ class handler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(data).encode())
 
     def do_GET(self):
-        path = self.path
-
-        if path in ["/", "/api", "/api/"]:
-            response = {
-                "status": "working",
-                "message": "Minimal Python API running on Vercel!",
-                "timestamp": datetime.now().isoformat(),
-                "path": path,
-            }
-        elif path == "/api/health":
-            response = {
-                "status": "healthy",
-                "timestamp": datetime.now().isoformat(),
-            }
-        else:
-            response = {"error": "Not found", "path": path}
-
+        response = {
+            "status": "working",
+            "message": "Step 1: Base handler works",
+        }
         self._send_json(response)
 
     def do_OPTIONS(self):
@@ -41,6 +36,3 @@ class handler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.end_headers()
-
-    def do_POST(self):
-        self._send_json({"message": "POST working", "path": self.path})
