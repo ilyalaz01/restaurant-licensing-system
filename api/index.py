@@ -1,38 +1,38 @@
 """
-Step-by-step diagnostic to find what's breaking
+Minimal FastAPI test for Vercel with Mangum adapter
 """
-from http.server import BaseHTTPRequestHandler
-import json
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from mangum import Mangum  # ← THIS IS KEY!
+from datetime import datetime
 
-# Uncomment these ONE AT A TIME to find what breaks:
+app = FastAPI(title="Restaurant Licensing API - Test")
 
-# Step 1: Test if FastAPI import works
-# from fastapi import FastAPI
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# Step 2: Test if your services import works  
-# from services import gemini_service
+@app.get("/")
+@app.get("/api")
+async def root():
+    return {
+        "status": "working",
+        "message": "FastAPI with Mangum working!",
+        "timestamp": datetime.now().isoformat()
+    }
 
-# Step 3: Test if Firebase import works
-# import firebase_admin
+@app.get("/api/health")
+async def health():
+    return {
+        "status": "healthy",
+        "timestamp": datetime.now().isoformat(),
+        "packages_working": True
+    }
 
-class handler(BaseHTTPRequestHandler):
-    def _send_json(self, data: dict, code: int = 200):
-        self.send_response(code)
-        self.send_header("Content-Type", "application/json")
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.end_headers()
-        self.wfile.write(json.dumps(data).encode())
-
-    def do_GET(self):
-        response = {
-            "status": "working",
-            "message": "Step 1: Base handler works",
-        }
-        self._send_json(response)
-
-    def do_OPTIONS(self):
-        self.send_response(200)
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
-        self.end_headers()
+# CRITICAL: Wrap FastAPI with Mangum
+handler = Mangum(app)  # ← Not just 'app'!
