@@ -1,5 +1,5 @@
 """
-Super minimal working Python API for Vercel
+Super minimal working Python API for Vercel .
 """
 
 from http.server import BaseHTTPRequestHandler
