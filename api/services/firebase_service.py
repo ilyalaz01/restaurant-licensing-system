@@ -231,10 +231,19 @@ class FirebaseService:
             print(f"Error tracking event: {e}")
             return {"success": False, "error": str(e)}
     
-    # Mock methods for testing without Firebase
+    _mock_reports_store = {}  # Class variable to store reports
+    _mock_business_store = {}  # Class variable to store businesses
+    
     def _mock_save_business(self, business_data: Dict) -> Dict[str, Any]:
         """Mock save business for testing"""
         business_id = f"MOCK-BUS-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+        
+        # Store in memory
+        self._mock_business_store[business_id] = {
+            **business_data,
+            "id": business_id
+        }
+        
         return {
             "success": True,
             "businessId": business_id,
@@ -243,6 +252,12 @@ class FirebaseService:
     
     def _mock_get_business(self, business_id: str) -> Dict[str, Any]:
         """Mock get business for testing"""
+        if business_id in self._mock_business_store:
+            return {
+                "success": True,
+                "data": self._mock_business_store[business_id]
+            }
+        
         return {
             "success": True,
             "data": {
@@ -255,6 +270,14 @@ class FirebaseService:
     def _mock_save_report(self, report_data: Dict, business_id: str) -> Dict[str, Any]:
         """Mock save report for testing"""
         report_id = f"MOCK-RPT-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+        
+        # Store the COMPLETE report in memory
+        self._mock_reports_store[report_id] = {
+            **report_data,  # ← Save ALL the fields!
+            "id": report_id,
+            "businessId": business_id
+        }
+        
         return {
             "success": True,
             "reportId": report_id,
@@ -263,11 +286,53 @@ class FirebaseService:
     
     def _mock_get_report(self, report_id: str) -> Dict[str, Any]:
         """Mock get report for testing"""
+        # Try to get from memory store
+        if report_id in self._mock_reports_store:
+            return {
+                "success": True,
+                "data": self._mock_reports_store[report_id]
+            }
+        
+        # Fallback to a complete mock structure
         return {
             "success": True,
             "data": {
                 "id": report_id,
                 "mock": True,
-                "executive_summary": "This is a mock report"
+                "summary": "This is a mock report. Firebase is in mock mode (no real database connection). The report would normally show complete AI-generated analysis here.",
+                "business": {
+                    "business_name": "Mock Restaurant",
+                    "owner_name": "Mock Owner",
+                    "size_sqm": 100,
+                    "seating_capacity": 40,
+                    "size_category": "medium",
+                    "seating_category": "standard",
+                    "features": []
+                },
+                "matched_regulations": [
+                    {
+                        "id": "MOCK-REG-001",
+                        "title": "Mock Regulation",
+                        "description": "This is a mock regulation for testing",
+                        "priority": "high"
+                    }
+                ],
+                "required_documents": [
+                    "Business license application",
+                    "Property documents",
+                    "Health certificate"
+                ],
+                "next_steps": [
+                    "1. Connect real Firebase database",
+                    "2. Submit questionnaire again",
+                    "3. Get real AI-generated report"
+                ],
+                "priority_summary": {
+                    "critical": 0,
+                    "high": 1,
+                    "medium": 0,
+                    "low": 0
+                },
+                "estimated_timeline": "2-3 months"
             }
         }
