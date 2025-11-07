@@ -330,10 +330,14 @@ async def server_error_handler(request, exc):
 async def test_gemini():
     """Test Gemini AI directly"""
     try:
-        gemini_service = GeminiService()
+        # Use the lazy loader to get the service
+        gemini_service, _, _ = get_services()
+        
+        if gemini_service is None:
+            return {"status": "error", "error": "GeminiService failed to load"}
         
         if gemini_service.mock_mode:
-            return {"status": "mock_mode", "working": False}
+            return {"status": "mock_mode", "working": False, "message": "Gemini is in mock mode (no API key or initialization failed)"}
         
         # Try a simple generation
         response = gemini_service.model.generate_content("Say hello in one sentence.")
@@ -344,8 +348,10 @@ async def test_gemini():
             "model": gemini_service.model_name
         }
     except Exception as e:
+        import traceback
         return {
             "status": "error",
-            "error": str(e)
+            "error": str(e),
+            "traceback": traceback.format_exc()
         }
 # No Mangum! Vercel handles ASGI natively

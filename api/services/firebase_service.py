@@ -25,27 +25,49 @@ class FirebaseService:
                 service_account_json = os.getenv('FIREBASE_SERVICE_ACCOUNT')
                 database_url = os.getenv('FIREBASE_DATABASE_URL')
                 
+                print(f"🔍 FIREBASE_SERVICE_ACCOUNT exists: {service_account_json is not None}")
+                print(f"🔍 FIREBASE_DATABASE_URL: {database_url}")
+                
                 if service_account_json:
-                    # Parse the JSON string
-                    service_account = json.loads(service_account_json)
-                    cred = credentials.Certificate(service_account)
+                    try:
+                        # Parse the JSON string
+                        service_account = json.loads(service_account_json)
+                        print(f"✓ Service account JSON parsed successfully")
+                        print(f"  Project ID: {service_account.get('project_id', 'N/A')}")
+                        
+                        cred = credentials.Certificate(service_account)
+                        print(f"✓ Credentials certificate created")
+                        
+                        # Initialize the app
+                        firebase_admin.initialize_app(cred, {
+                            'databaseURL': database_url
+                        })
+                        
+                        print(f"✅ Firebase initialized successfully!")
+                        self.mock_mode = False
+                        
+                    except json.JSONDecodeError as e:
+                        print(f"❌ Failed to parse service account JSON: {e}")
+                        print(f"   JSON length: {len(service_account_json)}")
+                        print(f"   First 50 chars: {service_account_json[:50]}")
+                        self.mock_mode = True
+                        return
+                    except Exception as e:
+                        print(f"❌ Failed to initialize Firebase: {e}")
+                        self.mock_mode = True
+                        return
                 else:
-                    # Try to use default credentials (for local development)
-                    print("Warning: No Firebase service account found, using mock mode")
+                    print("⚠️ No Firebase service account found, using mock mode")
                     self.mock_mode = True
                     return
-                
-                # Initialize the app
-                firebase_admin.initialize_app(cred, {
-                    'databaseURL': database_url
-                })
-                
-                self.mock_mode = False
             else:
+                print(f"✓ Firebase already initialized")
                 self.mock_mode = False
                 
         except Exception as e:
-            print(f"Error initializing Firebase: {e}")
+            print(f"❌ Error initializing Firebase: {e}")
+            import traceback
+            traceback.print_exc()
             self.mock_mode = True
     
     def check_connection(self) -> bool:
