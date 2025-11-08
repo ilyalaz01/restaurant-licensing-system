@@ -1,6 +1,6 @@
 """
-Google Gemini AI Service
-Fully AI-powered report generation - processes all data through AI
+Google Gemini AI Service - Hybrid Approach
+AI enhances content while preserving clean structure
 """
 
 import os
@@ -13,12 +13,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class GeminiService:
-    """Service for Google Gemini AI integration"""
+    """Service for Google Gemini AI integration - Hybrid approach"""
     
     def __init__(self):
         """Initialize Gemini service"""
         self.api_key = os.getenv('GEMINI_API_KEY')
-        self.model_name = 'gemini-2.5-flash'  
+        self.model_name = 'gemini-2.5-flash' 
         self.mock_mode = False
         
         if not self.api_key:
@@ -38,18 +38,61 @@ class GeminiService:
     
     async def generate_report(self, business_details: Any, matched_regulations: List[Dict], regenerate: bool = False) -> Dict[str, Any]:
         """
-        Generate FULLY AI-powered report
-        AI processes everything - summary, regulations, documents, steps
+        Generate AI-enhanced report with preserved structure
+        AI personalizes content but keeps clean formatting
         """
         
         if self.mock_mode:
             return self._generate_mock_report(business_details, matched_regulations)
         
         try:
-            # Generate ALL content through AI in one comprehensive call
-            full_report = await self._generate_complete_ai_report(business_details, matched_regulations)
+            # Generate personalized summary
+            summary = await self._generate_personalized_summary(business_details, matched_regulations)
             
-            return full_report
+            # Enhance each regulation (preserve structure but personalize text)
+            enhanced_regulations = await self._enhance_regulations(business_details, matched_regulations)
+            
+            # Generate documents and steps
+            documents = await self._generate_documents_list(business_details, matched_regulations)
+            next_steps = await self._generate_next_steps(business_details, matched_regulations)
+            
+            # Build report with preserved structure
+            report = {
+                "summary": summary,
+                
+                "business": {
+                    "business_name": business_details.business_name,
+                    "owner_name": business_details.owner_name,
+                    "size_sqm": business_details.size_sqm,
+                    "seating_capacity": business_details.seating_capacity,
+                    "size_category": business_details.size_category,
+                    "seating_category": business_details.seating_category,
+                    "features": business_details.features,
+                    "location_city": getattr(business_details, 'location_city', None),
+                    "email": getattr(business_details, 'email', None),
+                    "phone": getattr(business_details, 'phone', None)
+                },
+                
+                # Enhanced but structured regulations
+                "matched_regulations": enhanced_regulations,
+                
+                # AI-generated lists
+                "required_documents": documents,
+                "next_steps": next_steps,
+                
+                "priority_summary": {
+                    "critical": len([r for r in matched_regulations if r.get('priority') == 'critical']),
+                    "high": len([r for r in matched_regulations if r.get('priority') == 'high']),
+                    "medium": len([r for r in matched_regulations if r.get('priority') == 'medium']),
+                    "low": len([r for r in matched_regulations if r.get('priority') == 'low'])
+                },
+                
+                "estimated_timeline": self._estimate_timeline(business_details, matched_regulations),
+                "ai_generated": True,
+                "ai_model": self.model_name
+            }
+            
+            return report
             
         except Exception as e:
             print(f"Error generating AI report: {e}")
@@ -57,287 +100,240 @@ class GeminiService:
             traceback.print_exc()
             return self._generate_fallback_report(business_details, matched_regulations)
     
-    async def _generate_complete_ai_report(self, business: Any, regulations: List[Dict]) -> Dict[str, Any]:
-        """
-        Generate complete report with AI processing EVERYTHING
-        This is the core AI functionality
-        """
+    async def _generate_personalized_summary(self, business: Any, regulations: List[Dict]) -> str:
+        """Generate personalized summary paragraph"""
         
-        # Build comprehensive prompt that processes everything
-        prompt = self._build_full_ai_prompt(business, regulations)
+        features = ", ".join(business.features) if business.features else "standard operations"
+        location = getattr(business, 'location_city', 'Israel')
         
+        prompt = f"""You are a helpful business licensing consultant in Israel.
+
+Write a friendly, personalized welcome message for a restaurant owner in ENGLISH.
+
+Business: {business.business_name}
+Owner: {business.owner_name}
+Location: {location}
+Size: {business.size_sqm} sqm
+Seating: {business.seating_capacity} seats
+Features: {features}
+Number of requirements: {len(regulations)}
+
+Write 2-3 sentences that:
+1. Welcome the owner by name and mention their restaurant
+2. Acknowledge their specific situation (size, location, features)
+3. Give them confidence and explain what they need to do
+4. Mention realistic timeline (2-4 months typically)
+
+Use simple, encouraging language. Write in ENGLISH only.
+Do not use markdown or special formatting.
+Just write the text directly."""
+
         try:
-            # Generate content
             response = self.model.generate_content(prompt)
-            ai_text = response.text
+            return response.text.strip()
+        except Exception as e:
+            print(f"Summary generation failed: {e}")
+            return f"Welcome, {business.owner_name}! Based on your restaurant '{business.business_name}' with {business.size_sqm} sqm and features like {features}, you'll need to complete {len(regulations)} licensing requirements. This process typically takes 2-4 months with proper planning."
+    
+    async def _enhance_regulations(self, business: Any, regulations: List[Dict]) -> List[Dict]:
+        """
+        Enhance each regulation with AI while preserving structure
+        Keep: title, priority, requirements list, authority
+        Enhance: description (make business-specific and friendly)
+        """
+        
+        enhanced = []
+        
+        # Process in batches to avoid too many API calls
+        for reg in regulations[:12]:  # Limit to 12 regulations
+            try:
+                enhanced_reg = await self._enhance_single_regulation(business, reg)
+                enhanced.append(enhanced_reg)
+            except Exception as e:
+                print(f"Failed to enhance regulation {reg.get('id')}: {e}")
+                # Use original if AI fails
+                enhanced.append(reg)
+        
+        return enhanced
+    
+    async def _enhance_single_regulation(self, business: Any, regulation: Dict) -> Dict:
+        """Enhance a single regulation with AI"""
+        
+        original_title = regulation.get('title', '')
+        original_desc = regulation.get('description', '')
+        priority = regulation.get('priority', 'medium')
+        
+        prompt = f"""Rewrite this licensing requirement in business-friendly language for {business.business_name}.
+
+Original requirement:
+Title: {original_title}
+Description: {original_desc}
+
+Business context:
+- Name: {business.business_name}
+- Size: {business.size_sqm} sqm
+- Features: {', '.join(business.features)}
+
+Task: Rewrite the description in 1-2 sentences that:
+1. Explain it in simple, friendly English
+2. Make it specific to THIS business (mention their name or features when relevant)
+3. Explain WHY it matters
+4. Be concise and clear
+
+Write ONLY the description text. No title, no formatting, no bullets.
+Do not use ** or other markdown.
+Just plain text in English."""
+
+        try:
+            response = self.model.generate_content(prompt)
+            enhanced_description = response.text.strip()
             
-            # Parse AI response into structured format
-            report = self._parse_complete_ai_response(ai_text, business, regulations)
-            
-            return report
+            # Return enhanced regulation with preserved structure
+            return {
+                "id": regulation.get('id'),
+                "title": original_title,  # Keep original title
+                "description": enhanced_description,  # AI-enhanced description
+                "priority": priority,  # Keep original priority!
+                "requirements": regulation.get('requirements', []),  # Keep original list
+                "authority": regulation.get('authority'),  # Keep original
+                "ai_enhanced": True
+            }
             
         except Exception as e:
-            print(f"AI generation failed: {e}")
-            raise
+            print(f"Enhancement failed: {e}")
+            return regulation  # Return original on failure
     
-    def _build_full_ai_prompt(self, business: Any, regulations: List[Dict]) -> str:
-        """
-        Build comprehensive prompt for AI to process EVERYTHING
-        """
+    async def _generate_documents_list(self, business: Any, regulations: List[Dict]) -> List[str]:
+        """Generate required documents list"""
         
-        # Format features
-        features_text = ", ".join(business.features) if business.features else "standard operations"
+        features = ", ".join(business.features) if business.features else "none"
         
-        # Format raw regulations for AI to process
-        regulations_text = "\n\n".join([
-            f"REGULATION {i+1}:\n"
-            f"Title: {reg.get('title', 'N/A')}\n"
-            f"Priority: {reg.get('priority', 'N/A')}\n"
-            f"Description: {reg.get('description', 'N/A')}\n"
-            f"Requirements: {', '.join(reg.get('requirements', []))}\n"
-            f"Authority: {reg.get('authority', 'N/A')}"
-            for i, reg in enumerate(regulations[:12])  # Limit to avoid token limits
-        ])
-        
-        prompt = f"""You are an expert business licensing consultant in Israel helping restaurant owners.
+        prompt = f"""List the required documents for licensing {business.business_name} in Israel.
 
-CRITICAL INSTRUCTIONS:
-- Write EVERYTHING in ENGLISH only
-- Use business-friendly language (not legal jargon)
-- Personalize EVERYTHING to this specific business
-- Be practical and actionable
-- Use a warm, encouraging tone
+Business details:
+- Size: {business.size_sqm} sqm
+- Seating: {business.seating_capacity} seats
+- Features: {features}
 
-BUSINESS PROFILE:
-Business Name: {business.business_name}
-Owner: {business.owner_name}
-Size: {business.size_sqm} square meters ({business.size_category} establishment)
-Seating: {business.seating_capacity} seats ({business.seating_category} capacity)
-Features: {features_text}
-Location: {getattr(business, 'location_city', 'Israel')}
+Generate a list of 8-10 required documents in ENGLISH.
+Each item should be a single clear sentence.
+Be specific to this business.
 
-RAW REGULATIONS DATA:
-{regulations_text}
+Format:
+- One document per line
+- Start each line with the document name
+- No numbering, no bullets, no ** formatting
+- Just plain text
+- Example: "Complete Business License Application Form from the Local Licensing Authority"
 
-YOUR TASK:
-Generate a complete, personalized licensing report. Process the raw regulations above and transform them into clear, actionable guidance.
+Write the list now:"""
 
-OUTPUT FORMAT (return as structured text with clear sections):
-
-## EXECUTIVE SUMMARY
-[Write 2-3 sentences in ENGLISH that:
-- Directly address the business owner by referencing their specific business
-- Explain what they need to do in simple terms
-- Give realistic timeline
-- Be encouraging but realistic]
-
-## KEY REQUIREMENTS
-[Process each regulation above and rewrite in business-friendly language:
-- For EACH regulation, write a clear explanation in simple English
-- Explain WHY it matters for THIS specific business
-- Give practical advice on HOW to comply
-- Use format: "**Title** (Priority): Explanation specific to {business.business_name}"
-- Make it personal, not generic]
-
-## REQUIRED DOCUMENTS
-[List 8-10 specific documents needed, in simple language:
-- Based on the regulations above
-- Customized for this business size and features
-- Each document should be a clear, one-line description]
-
-## NEXT STEPS
-[Create 6-8 actionable steps:
-- Step-by-step guidance specific to this business
-- Include who to contact
-- Reference specific authorities mentioned in regulations
-- Be practical and time-sensitive
-- Format: "1. First action for {business.business_name}..."]
-
-## ESTIMATED TIMELINE
-[Give a realistic timeline based on:
-- Business size: {business.size_sqm} sqm
-- Features: {features_text}
-- Number of requirements: {len(regulations)}
-- Format: "X-Y months" with brief explanation]
-
-REMEMBER:
-- Everything must be in ENGLISH
-- Make it personal to "{business.business_name}"
-- Use their specific features: {features_text}
-- Transform legal language into business language
-- Be specific, not generic
-
-Generate the report now:"""
-        
-        return prompt
+        try:
+            response = self.model.generate_content(prompt)
+            text = response.text.strip()
+            
+            # Parse into list
+            docs = []
+            for line in text.split('\n'):
+                line = line.strip()
+                # Remove any markdown or bullets
+                line = line.lstrip('-*•123456789. ')
+                if line and len(line) > 10:
+                    docs.append(line)
+            
+            return docs[:10]  # Limit to 10
+            
+        except Exception as e:
+            print(f"Documents generation failed: {e}")
+            return [
+                "Complete Business License Application Form from the Local Licensing Authority",
+                "Property lease agreement or ownership proof",
+                "Architectural plans signed by licensed engineer or architect",
+                "Fire safety certificate from Fire and Rescue Authority",
+                "Health department approval for kitchen and food areas",
+                "Environmental impact assessment diagram",
+                "Owner's ID and business registration documents",
+                "Insurance certificates for business liability"
+            ]
     
-    def _parse_complete_ai_response(self, ai_text: str, business: Any, regulations: List[Dict]) -> Dict[str, Any]:
-        """
-        Parse AI response into structured report format
-        """
+    async def _generate_next_steps(self, business: Any, regulations: List[Dict]) -> List[str]:
+        """Generate actionable next steps"""
         
-        # Extract sections from AI response
-        summary = self._extract_section(ai_text, "EXECUTIVE SUMMARY", "KEY REQUIREMENTS")
-        key_requirements_text = self._extract_section(ai_text, "KEY REQUIREMENTS", "REQUIRED DOCUMENTS")
-        documents_text = self._extract_section(ai_text, "REQUIRED DOCUMENTS", "NEXT STEPS")
-        steps_text = self._extract_section(ai_text, "NEXT STEPS", "ESTIMATED TIMELINE")
-        timeline = self._extract_section(ai_text, "ESTIMATED TIMELINE", "---")
+        features = ", ".join(business.features) if business.features else "none"
         
-        # Process AI-generated requirements into structured format
-        ai_processed_regulations = self._parse_ai_requirements(key_requirements_text, regulations)
-        
-        # Parse documents list
-        required_documents = self._parse_list_from_text(documents_text)
-        
-        # Parse next steps
-        next_steps = self._parse_list_from_text(steps_text)
-        
-        # Build complete report
-        report = {
-            "summary": summary.strip(),
+        prompt = f"""Create a step-by-step action plan for {business.business_name} to get licensed.
+
+Business: {business.business_name}
+Size: {business.size_sqm} sqm
+Features: {features}
+
+Generate 6-8 actionable steps in ENGLISH.
+Make them specific, practical, and in logical order.
+
+Format:
+- Number each step (1., 2., etc.)
+- Each step should be specific to this business
+- Include who to contact where relevant
+- Be concise (1-2 sentences per step)
+- No ** formatting, just plain text
+
+Example format:
+1. Hire a licensed engineer to prepare site plans for your 165 sqm space
+2. Contact Haifa Municipality Licensing Department to obtain application forms
+
+Write the steps now:"""
+
+        try:
+            response = self.model.generate_content(prompt)
+            text = response.text.strip()
             
-            "business": {
-                "business_name": business.business_name,
-                "owner_name": business.owner_name,
-                "size_sqm": business.size_sqm,
-                "seating_capacity": business.seating_capacity,
-                "size_category": business.size_category,
-                "seating_category": business.seating_category,
-                "features": business.features,
-                "location_city": getattr(business, 'location_city', None),
-                "email": getattr(business, 'email', None),
-                "phone": getattr(business, 'phone', None)
-            },
+            # Parse into list
+            steps = []
+            for line in text.split('\n'):
+                line = line.strip()
+                if line and len(line) > 10:
+                    # Keep the numbering
+                    steps.append(line)
             
-            # AI-processed regulations (transformed from raw data)
-            "matched_regulations": ai_processed_regulations,
+            return steps[:8]  # Limit to 8
             
-            # AI-generated documents list
-            "required_documents": required_documents[:12],
-            
-            # AI-generated next steps
-            "next_steps": next_steps[:8],
-            
-            "priority_summary": {
-                "critical": len([r for r in regulations if r.get('priority') == 'critical']),
-                "high": len([r for r in regulations if r.get('priority') == 'high']),
-                "medium": len([r for r in regulations if r.get('priority') == 'medium']),
-                "low": len([r for r in regulations if r.get('priority') == 'low'])
-            },
-            
-            "estimated_timeline": timeline.strip() if timeline else "2-3 months",
-            "ai_generated": True,
-            "ai_model": self.model_name
-        }
-        
-        return report
+        except Exception as e:
+            print(f"Steps generation failed: {e}")
+            return [
+                "1. Hire a licensed engineer or architect to prepare required documentation",
+                "2. Contact your local municipal licensing authority to obtain application forms",
+                "3. Schedule consultations with Ministry of Health and Fire Department",
+                "4. Gather all ownership/lease documents and business registration papers",
+                "5. Prepare your kitchen and facilities for health inspection",
+                "6. Compile all documents and submit complete application to licensing authority",
+                "7. Follow up weekly with authorities and respond promptly to requests",
+                "8. Once approved, display your business license prominently at entrance"
+            ]
     
-    def _extract_section(self, text: str, start_marker: str, end_marker: str) -> str:
-        """Extract section between two markers"""
-        import re
+    def _estimate_timeline(self, business: Any, regulations: List[Dict]) -> str:
+        """Estimate timeline based on complexity"""
+        base_months = 2
         
-        # Try to find section
-        pattern = rf"{start_marker}(.*?)(?={end_marker}|$)"
-        match = re.search(pattern, text, re.DOTALL | re.IGNORECASE)
+        if business.size_sqm > 150:
+            base_months += 1
+        if len(business.features) > 2:
+            base_months += 0.5
+        if len(regulations) > 10:
+            base_months += 0.5
         
-        if match:
-            content = match.group(1).strip()
-            # Remove markdown headers
-            content = re.sub(r'^#+\s+', '', content, flags=re.MULTILINE)
-            return content
+        months = int(base_months)
         
-        return ""
-    
-    def _parse_ai_requirements(self, requirements_text: str, original_regulations: List[Dict]) -> List[Dict]:
-        """
-        Parse AI-generated requirements text into structured format
-        AI has already processed and simplified them
-        """
-        
-        structured_reqs = []
-        
-        # Split by paragraphs or numbered items
-        lines = requirements_text.split('\n')
-        
-        current_req = None
-        for line in lines:
-            line = line.strip()
-            if not line:
-                continue
-            
-            # Check if this is a new requirement (starts with ** or number)
-            if line.startswith('**') or line.startswith('###') or (len(line) > 0 and line[0].isdigit()):
-                if current_req:
-                    structured_reqs.append(current_req)
-                
-                # Parse the requirement
-                # Extract title and priority
-                title = line.replace('**', '').replace('###', '').strip()
-                
-                # Try to extract priority
-                priority = 'medium'
-                if '(Critical)' in title or '(CRITICAL)' in title:
-                    priority = 'critical'
-                    title = title.replace('(Critical)', '').replace('(CRITICAL)', '').strip()
-                elif '(High)' in title or '(HIGH)' in title:
-                    priority = 'high'
-                    title = title.replace('(High)', '').replace('(HIGH)', '').strip()
-                elif '(Medium)' in title or '(MEDIUM)' in title:
-                    priority = 'medium'
-                    title = title.replace('(Medium)', '').replace('(MEDIUM)', '').strip()
-                elif '(Low)' in title or '(LOW)' in title:
-                    priority = 'low'
-                    title = title.replace('(Low)', '').replace('(LOW)', '').strip()
-                
-                current_req = {
-                    "id": f"AI-REQ-{len(structured_reqs)+1:03d}",
-                    "title": title,
-                    "priority": priority,
-                    "description": "",
-                    "requirements": [],
-                    "ai_processed": True
-                }
-            elif current_req:
-                # Add to description
-                current_req["description"] += " " + line
-        
-        # Add last requirement
-        if current_req:
-            structured_reqs.append(current_req)
-        
-        # If parsing failed, use original regulations but mark as AI-processed
-        if len(structured_reqs) < 3:
-            return [{
-                **reg,
-                "ai_processed": True,
-                "description": f"[AI] {reg.get('description', '')}"
-            } for reg in original_regulations[:10]]
-        
-        return structured_reqs[:12]
-    
-    def _parse_list_from_text(self, text: str) -> List[str]:
-        """Parse a bulleted or numbered list from text"""
-        items = []
-        
-        for line in text.split('\n'):
-            line = line.strip()
-            if not line:
-                continue
-            
-            # Remove list markers
-            line = line.lstrip('*-•123456789.')
-            line = line.strip()
-            
-            if line and len(line) > 5:
-                items.append(line)
-        
-        return items
+        if months <= 2:
+            return "2-3 months with efficient preparation"
+        elif months <= 3:
+            return "3-4 months for standard process"
+        else:
+            return "4-6 months due to complexity"
     
     def _generate_mock_report(self, business: Any, regulations: List[Dict]) -> Dict[str, Any]:
-        """Generate mock report for testing without API key"""
+        """Mock report when API unavailable"""
         return {
-            "summary": f"This is a mock report for {business.business_name}. In production, AI would generate a personalized analysis here.",
-            
+            "summary": f"Mock report for {business.business_name}. API key not configured.",
             "business": {
                 "business_name": business.business_name,
                 "owner_name": business.owner_name,
@@ -347,36 +343,32 @@ Generate the report now:"""
                 "seating_category": business.seating_category,
                 "features": business.features
             },
-            
             "matched_regulations": regulations[:10],
             "required_documents": [
                 "Business license application form",
                 "Property documents",
-                "Health certificates",
-                "Fire safety approval"
+                "Health certificates"
             ],
             "next_steps": [
-                "1. Hire certified professional",
-                "2. Prepare documentation",
-                "3. Submit application"
+                "1. Configure Gemini API key",
+                "2. Restart service",
+                "3. Generate real report"
             ],
-            
             "priority_summary": {
                 "critical": len([r for r in regulations if r.get('priority') == 'critical']),
                 "high": len([r for r in regulations if r.get('priority') == 'high']),
                 "medium": len([r for r in regulations if r.get('priority') == 'medium']),
                 "low": len([r for r in regulations if r.get('priority') == 'low'])
             },
-            
             "estimated_timeline": "2-3 months",
             "ai_generated": False,
             "mock_mode": True
         }
     
     def _generate_fallback_report(self, business: Any, regulations: List[Dict]) -> Dict[str, Any]:
-        """Generate fallback report when AI fails"""
+        """Fallback when AI fails"""
         return {
-            "summary": f"Based on your restaurant '{business.business_name}' with {business.size_sqm} sqm and {len(business.features)} special features, you'll need to complete approximately {len(regulations)} licensing requirements. This process typically takes 2-3 months.",
+            "summary": f"Welcome, {business.owner_name}! Your restaurant '{business.business_name}' with {business.size_sqm} sqm will need to complete {len(regulations)} licensing requirements. The process typically takes 2-4 months with proper planning and professional help.",
             
             "business": {
                 "business_name": business.business_name,
@@ -389,23 +381,27 @@ Generate the report now:"""
             },
             
             "matched_regulations": regulations,
+            
             "required_documents": [
-                "Business license application form",
-                "Property lease or ownership proof",
-                "Architectural plans signed by certified engineer",
-                "Fire safety certificate",
-                "Health department approval",
+                "Complete Business License Application Form",
+                "Property lease or ownership documents",
+                "Architectural plans signed by certified professional",
+                "Fire safety certificate from Fire Authority",
+                "Health department kitchen approval",
                 "Environmental impact assessment",
-                "Owner's ID and company registration",
+                "Business registration and owner's ID",
                 "Insurance certificates"
             ],
+            
             "next_steps": [
-                "1. Hire a licensed engineer or architect to prepare required documentation",
-                "2. Contact your local municipal licensing authority",
-                "3. Schedule consultations with Ministry of Health and Fire Department",
-                "4. Gather all ownership/lease documents",
-                "5. Compile all documents and submit complete application",
-                "6. Follow up with authorities and respond to requests"
+                "1. Hire a licensed engineer or architect for documentation",
+                "2. Contact local municipal licensing authority",
+                "3. Schedule Ministry of Health consultation",
+                "4. Schedule Fire Department inspection",
+                "5. Gather all ownership and registration documents",
+                "6. Submit complete application package",
+                "7. Follow up weekly with authorities",
+                "8. Display license once approved"
             ],
             
             "priority_summary": {
@@ -415,7 +411,7 @@ Generate the report now:"""
                 "low": len([r for r in regulations if r.get('priority') == 'low'])
             },
             
-            "estimated_timeline": "2-3 months",
+            "estimated_timeline": "2-4 months",
             "ai_generated": False,
             "fallback_mode": True
         }
