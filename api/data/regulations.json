@@ -1,416 +1,1067 @@
 {
-  "metadata": {
-    "source": "Israeli Business Licensing Regulations - Item 4.2A",
-    "processed_date": "2025-11-07",
-    "version": "1.0",
-    "scope": "Restaurant and Food Establishment Licensing",
-    "note": "Partial processing as per project requirements - focused on Part A and B"
-  },
-  "categories": {
-    "general_definitions": {
-      "name": "General Definitions",
-      "description": "Basic terms and regulatory framework",
-      "chapter": 1
-    },
-    "cross_sectional": {
-      "name": "Cross-Sectional Conditions",
-      "description": "Conditions applying to all food establishments",
-      "chapter": 2
-    },
-    "police": {
-      "name": "Israel Police Requirements",
-      "description": "Police licensing requirements (Note: Not issued as of June 2022)",
-      "chapter": 3
-    },
-    "health": {
-      "name": "Ministry of Health",
-      "description": "Health and sanitation requirements",
-      "chapter": 4
-    },
-    "fire_affidavit": {
-      "name": "Fire and Rescue (Affidavit)",
-      "description": "Fire safety affidavit requirements",
-      "chapter": 5
-    },
-    "fire_authority": {
-      "name": "Fire and Rescue Authority",
-      "description": "Fire safety authority approvals",
-      "chapter": 6
-    }
-  },
-  "business_attributes": {
-    "size": {
-      "small": "≤50 sqm",
-      "medium": "50-100 sqm",
-      "large": ">100 sqm"
-    },
-    "seating": {
-      "intimate": "≤20 seats",
-      "standard": "20-50 seats",
-      "large": ">50 seats"
-    },
-    "features": {
-      "alcohol": "Serving alcoholic beverages",
-      "delivery": "Food delivery service",
-      "outdoor": "Outdoor seating area",
-      "kitchen_gas": "Kitchen uses gas",
-      "live_music": "Live music or entertainment"
-    }
-  },
-  "priority_levels": {
-    "critical": "Must be completed before opening - legal requirement",
-    "high": "Required for license approval",
-    "medium": "Important compliance requirement",
-    "low": "Recommended best practice"
-  },
   "regulations": [
     {
       "id": "REG-001",
       "title": "Certified Professional Requirement",
-      "category": "general_definitions",
-      "chapter": 1,
+      "title_he": "בעל מקצוע מוסמך",
+      "category": "professional_requirements",
       "priority": "critical",
-      "description": "Business plan and site documents must be signed by a certified professional (licensed engineer or architect)",
+      "description": "Israeli law requires that all business and building plans for a restaurant be prepared and signed by a 'Certified Professional'. This is a licensed engineer or architect who is registered with the state. This is a non-negotiable first step for your application.",
+      "description_he": "חוק רישוי עסקים מחייב כי כל תכניות העסק יוכנו וייחתמו על ידי 'בעל מקצוע מוסמך'. זהו מהנדס רשוי או אדריכל רשוי הרשום בפנקס המהנדסים והאדריכלים. זהו צעד ראשון והכרחי לבקשת הרישיון.",
       "requirements": [
-        "Hire licensed engineer or architect",
-        "Professional must sign environmental diagram",
-        "Professional must sign site map",
-        "Professional must sign business plan"
+        "Engage a licensed Engineer or Architect registered in the appropriate state registry.",
+        "For a 'simple structure', a registered practical engineer (הנדסאי) may be permitted.",
+        "The Certified Professional must review and sign all submitted plans (environmental, layout, and business plan).",
+        "Submit the professional's signed affidavit as part of your license application."
+      ],
+      "requirements_he": [
+        "העסקת מהנדס רשוי או אדריכל רשוי הרשום בפנקס המהנדסים והאדריכלים.",
+        "עבור 'מבנה פשוט', ניתן להעסיק הנדסאי רשום.",
+        "בעל המקצוע המוסמך חייב לחתום על כל התכניות המוגשות (תרשים סביבה, מפה מצבית, תכנית עסק).",
+        "הגשת תצהיר חתום של בעל המקצוע המוסמך כחלק מבקשת הרישיון."
       ],
       "authority": "Ministry of Interior",
+      "authority_he": "משרד הפנים",
+      "legal_reference": "Uniform Specification 4.2A, Section 1.1",
       "applicable_conditions": {
-        "always_required": true
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
       },
-      "tags": [
-        "professional",
-        "documentation",
-        "planning"
-      ],
-      "legal_reference": "Section 1.1 - Business Licensing Law, 1968"
+      "estimated_cost": "5,000-15,000 ILS",
+      "estimated_timeframe": "2-4 weeks",
+      "severity": "Must have before opening. Application will be rejected without it.",
+      "notes": "This professional is legally responsible for ensuring your plans meet all codes."
     },
     {
       "id": "REG-002",
-      "title": "Business License Application",
-      "category": "cross_sectional",
-      "chapter": 2,
+      "title": "Submission of Business Plans",
+      "title_he": "הגשת תכניות עסק",
+      "category": "permits_licenses",
       "priority": "critical",
-      "description": "Must submit official application and receive all required approvals before operating",
+      "description": "To apply for a license, you must submit a formal set of plans detailing your business. This includes an environmental diagram, a site map, and a full business plan, all signed by your Certified Professional.",
+      "description_he": "לבקשה לרישיון יצורפו, לאחר שנחתמו בידי בעל מקצוע מוסמך: תרשים סביבה, מפה מצבית ותכנית עסק, כמפורט בתקנות.",
       "requirements": [
-        "Submit complete application form",
-        "Include all required documents",
-        "Obtain approval from all relevant authorities",
-        "Display license publicly at business location"
+        "Submit an 'Environmental Diagram' (תרשים סביבה).",
+        "Submit a 'Site Map' (מפה מצבית).",
+        "Submit a detailed 'Business Plan' (תכנית עסק).",
+        "All plans must be signed by your Certified Professional (בעל מקצוע מוסמך)."
       ],
-      "authority": "Local Licensing Authority",
+      "requirements_he": [
+        "הגשת תרשים סביבה.",
+        "הגשת מפה מצבית.",
+        "הגשת תכנית עסק.",
+        "כל התכניות חייבות להיות חתומות על ידי בעל מקצוע מוסמך."
+      ],
+      "authority": "Municipality / Ministry of Interior",
+      "authority_he": "עירייה / משרד הפנים",
+      "legal_reference": "Uniform Specification 4.2A, Section 2.4",
       "applicable_conditions": {
-        "always_required": true
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
       },
-      "tags": [
-        "application",
-        "license",
-        "legal"
-      ],
-      "legal_reference": "Chapter 2 - Cross-Sectional Conditions"
+      "estimated_cost": null,
+      "estimated_timeframe": null,
+      "severity": "Required for license application.",
+      "notes": "These are the core documents for your application. All other approvals are based on them."
     },
     {
       "id": "REG-003",
-      "title": "Required Documentation Package",
-      "category": "cross_sectional",
-      "chapter": 2,
-      "priority": "critical",
-      "description": "Application must include environmental diagram, site map, and business plan signed by certified professional",
+      "title": "Security Camera (CCTV) System",
+      "title_he": "מצלמות טלוויזיה במעגל סגור (טמ\"ס)",
+      "category": "equipment_facilities",
+      "priority": "high",
+      "description": "A CCTV system is required by the police for public safety. It must meet minimum quality standards and recordings must be kept for 14 days.",
+      "description_he": "בעסק תותקן מערכת מצלמות טלוויזיה במעגל סגור (טמ\"ס) ברזולוציה של 1.3 מגה פיקסל לפחות. ההקלטה תישמר למשך 14 יום לפחות, כדרישת המשטרה.",
       "requirements": [
-        "Environmental impact diagram",
-        "Detailed site map",
-        "Comprehensive business plan",
-        "All documents must be signed by certified professional"
+        "Install a CCTV system with at least 1.3 Megapixel resolution.",
+        "Install cameras at the entrance (facing out) and covering the business facade (up to 10m).",
+        "Ensure cameras have automatic exposure and night vision capabilities.",
+        "Recording speed must be at least 25 FPS.",
+        "Store all recordings for a minimum of 14 days.",
+        "Post signs indicating the area is under video surveillance."
       ],
-      "authority": "Local Licensing Authority",
+      "requirements_he": [
+        "התקנת מערכת טמ\"ס ברזולוציה של 1.3 מגה פיקסל לפחות.",
+        "התקנת מצלמות במבואת הכניסה ועל הקיר החיצוני (עד 10מ').",
+        "שימוש במצלמות עם חשיפה אוטומטית ויכולת צילום בחשיכה.",
+        "מהירות צילום של 25 FPS לפחות.",
+        "שמירת הקלטות למשך 14 יום לפחות.",
+        "הצבת שלט המודיע כי האזור מצולם."
+      ],
+      "authority": "משטרת ישראל",
+      "authority_he": "משטרת ישראל",
+      "legal_reference": "Uniform Specification 4.2A, Section 3.3",
       "applicable_conditions": {
-        "always_required": true
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
       },
-      "tags": [
-        "documentation",
-        "planning",
-        "professional"
-      ],
-      "legal_reference": "Chapter 2, Application Requirements"
+      "estimated_cost": "2,000-8,000 ILS",
+      "estimated_timeframe": "1-3 days",
+      "severity": "Required for police approval.",
+      "notes": "Note: As of 14.6.2022, the police no longer give *approval* for this item, but the *requirement* to have the system may still be enforced."
     },
     {
       "id": "REG-004",
-      "title": "License Validity and Display",
-      "category": "cross_sectional",
-      "chapter": 2,
-      "priority": "high",
-      "description": "License must be displayed publicly and remains valid only while business details unchanged",
+      "title": "Alcohol Sale to Minors Prohibited",
+      "title_he": "איסור מכירת משקאות משכרים לקטינים",
+      "category": "permits_licenses",
+      "priority": "critical",
+      "description": "It is strictly forbidden to sell or serve alcoholic beverages to any person under the age of 18. Clear signage stating this law (min. 40x50 cm) must be displayed at the entrance.",
+      "description_he": "בעל העסק או מנהל העסק יודיע לציבור כי לא יימכרו משקאות משכרים למי שטרם מלאו לו 18 שנים, ויציב שילוט שיוצג מעל פתחי הכניסה לבית העסק.",
       "requirements": [
-        "Display license in visible location",
-        "Update license if ownership changes",
-        "Update license if size/layout changes",
-        "Update license if activity type changes",
-        "Report changes 3 months in advance"
+        "Do not sell or serve alcohol to anyone under 18.",
+        "Staff must be trained to check ID (תעודה מזהה) for anyone who appears underage.",
+        "Post a sign (min. 40x50 cm) at the entrance stating the prohibition.",
+        "The sign must be made of hard material (not cardboard) and be illuminated at night."
       ],
-      "authority": "Local Licensing Authority",
-      "applicable_conditions": {
-        "always_required": true
-      },
-      "tags": [
-        "compliance",
-        "display",
-        "updates"
+      "requirements_he": [
+        "איסור מוחלט על מכירה או הגשה של אלכוהול לקטינים (מתחת לגיל 18).",
+        "חובה על הצוות לדרוש תעודה מזהה מכל מבקש.",
+        "הצבת שלט (מינימום 40x50 ס\"מ) בכניסה המציין את האיסור.",
+        "השלט יהיה מחומר קשיח, עם תאורה."
       ],
-      "legal_reference": "Chapter 2, License Management"
-    },
-    {
-      "id": "REG-005",
-      "title": "Appeals Process",
-      "category": "cross_sectional",
-      "chapter": 2,
-      "priority": "medium",
-      "description": "Business owners may appeal licensing conditions (except those established by law)",
-      "requirements": [
-        "Submit appeal within 30 days",
-        "Use official appeal form",
-        "Pay fee of ₪323",
-        "Note: Filing appeal does not suspend condition"
-      ],
-      "authority": "Licensing Authority",
-      "applicable_conditions": {
-        "always_required": false
-      },
-      "tags": [
-        "appeals",
-        "legal",
-        "process"
-      ],
-      "legal_reference": "Chapter 2, Appeals"
-    },
-    {
-      "id": "REG-006",
-      "title": "Police Licensing Requirements",
-      "category": "police",
-      "chapter": 3,
-      "priority": "high",
-      "description": "Police approval requirements for food establishments (Note: As of June 14, 2022, police no longer issues approvals for this category)",
-      "requirements": [
-        "Historical requirement - no longer applicable",
-        "Verify current status with local licensing authority",
-        "May still apply to businesses serving only alcohol"
-      ],
-      "authority": "Israel Police",
+      "authority": "משטרת ישראל",
+      "authority_he": "משטרת ישראל",
+      "legal_reference": "Uniform Specification 4.2A, Section 3.6",
       "applicable_conditions": {
         "always_required": false,
+        "business_size": null,
+        "seating_capacity": null,
         "features": [
           "alcohol"
         ]
       },
-      "tags": [
-        "police",
-        "historical",
-        "alcohol"
+      "estimated_cost": "200-500 ILS",
+      "estimated_timeframe": "1 day",
+      "severity": "Must have before opening. Non-compliance is a criminal offense.",
+      "notes": null
+    },
+    {
+      "id": "REG-005",
+      "title": "Sanitary and Architectural Plan",
+      "title_he": "תכנית אדריכלית וסניטרית",
+      "category": "sanitation_health",
+      "priority": "critical",
+      "description": "A detailed sanitary and architectural plan must be submitted to the Ministry of Health. This plan must show all rooms, equipment, and water/sewage systems, and be signed by your certified professional.",
+      "description_he": "לבקשה לרישיון יצורפו תכנית אדריכלית וסניטרית שתכלול: תרשים סביבה, מפה מצבית, תכנית עסק, ופרשה טכנית. התכנית חייבת להיות חתומה על ידי בעל מקצוע מוסמך.",
+      "requirements": [
+        "Submit a 1:100 scale plan showing layout, dimensions, and purpose of every room.",
+        "Plan must detail all water supply (hot/cold) and sewage disposal systems (pipes, drains, grease traps).",
+        "Clearly mark the location of all sanitary fixtures (sinks, toilets) and equipment.",
+        "Show locations for all food handling areas: receiving, storage, preparation, cooking, and serving.",
+        "Include details on ventilation and air conditioning systems."
       ],
-      "legal_reference": "Chapter 3, Note dated June 14, 2022"
+      "requirements_he": [
+        "הגשת תכנית בקנה מידה 1:100 המפרטת את כל חדרי העסק וייעודם.",
+        "פירוט מלא של מערכות אספקת מים (קרים וחמים) וסילוק שפכים (כולל מפריד שומן).",
+        "סימון מיקום כל הציוד והקבועות הסניטריות.",
+        "סימון כל אזורי הטיפול במזון (קבלה, אחסון, הכנה, הגשה).",
+        "פירוט מערכות אוורור ומיזוג."
+      ],
+      "authority": "Ministry of Health",
+      "authority_he": "משרד הבריאות",
+      "legal_reference": "Uniform Specification 4.2A, Section 4.3.1",
+      "applicable_conditions": {
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
+      },
+      "estimated_cost": null,
+      "estimated_timeframe": null,
+      "severity": "Must have for Ministry of Health approval.",
+      "notes": "This is part of the main plan submission."
+    },
+    {
+      "id": "REG-006",
+      "title": "Potable Water Supply",
+      "title_he": "אספקת מי שתייה",
+      "category": "sanitation_health",
+      "priority": "critical",
+      "description": "The business must be connected to an approved potable water supply. Both hot and cold running water must be available at all times for all hygiene and preparation needs.",
+      "description_he": "לעסק יסופקו מי שתייה על ידי חיבור למערכת אספקת מים או למתקן הפקה שאושרו על ידי רשות הבריאות בלבד. חובה לספק מים קרים ומים חמים.",
+      "requirements": [
+        "Connect to a municipal water supply or other source approved by the Ministry of Health.",
+        "Ensure both hot and cold running water are available at all sinks and fixtures.",
+        "Install a backflow prevention device (מכשיר מונע זרימה חוזרת) as required.",
+        "Perform periodic cleaning and disinfection of any water tanks (מאגרי מים)."
+      ],
+      "requirements_he": [
+        "חיבור למערכת אספקת מים מאושרת על ידי משרד הבריאות.",
+        "חובה לספק מים קרים ומים חמים זורמים בכל עת.",
+        "התקנת מכשיר מונע זרימה חוזרת (מז\"ח) לפי דרישה (סעיף 4.6.8).",
+        "ביצוע ניקוי וחיטוי תקופתי למאגרי מים (אם קיימים)."
+      ],
+      "authority": "Ministry of Health",
+      "authority_he": "משרד הבריאות",
+      "legal_reference": "Uniform Specification 4.2A, Section 4.6",
+      "applicable_conditions": {
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
+      },
+      "estimated_cost": "1,000-3,000 ILS (for backflow device)",
+      "estimated_timeframe": "1-2 days",
+      "severity": "Must have before opening.",
+      "notes": "Hot and cold water is a non-negotiable for sanitation."
     },
     {
       "id": "REG-007",
-      "title": "Ministry of Health Approval",
-      "category": "health",
-      "chapter": 4,
+      "title": "Sewage Disposal and Grease Trap",
+      "title_he": "סילוק שפכים ומפריד שומן",
+      "category": "sanitation_health",
       "priority": "critical",
-      "description": "Food establishments must obtain Ministry of Health approval for sanitation and food safety",
+      "description": "All business wastewater (sewage) must be disposed of through a central sewage system. A grease trap (מפריד שומן) is mandatory to prevent grease from clogging the public system.",
+      "description_he": "שפכי העסק יסולקו אך ורק דרך מערכת סילוק שפכים אשר תחובר למערכת ביוב מרכזית... מערכת סילוק שפכים של העסק תחובר למפריד שומן... יותקן בהתאם להוראות המנהל.",
       "requirements": [
-        "Kitchen and food preparation area inspection",
-        "Proper ventilation systems",
-        "Food storage compliance",
-        "Waste disposal systems",
-        "Water supply approval",
-        "Employee health certifications"
+        "Connect all drains to the central municipal sewage system.",
+        "Install an approved grease trap (מפריד שומן) according to Ministry of Health specifications.",
+        "Ensure sewage pipes do not pass *above* food preparation or storage areas.",
+        "Maintain and clean the grease trap regularly and keep records of disposal.",
+        "In case of a sewage overflow, the business must close immediately, report it, and disinfect."
+      ],
+      "requirements_he": [
+        "חיבור כלל מערכות הניקוז למערכת ביוב מרכזית.",
+        "התקנת מפריד שומן (בור שומן) מאושר.",
+        "לוודא שצנרת ביוב לא עוברת מעל אזורי הכנת מזון או אחסון (סעיף 4.7.3).",
+        "תחזוקה וניקוי שוטף של מפריד השומן ושמירת תעודות פינוי (סעיף 4.4.1(3)).",
+        "במקרה של הצפת ביוב, חובה לסגור את העסק מידית, לדווח ולחטא."
       ],
       "authority": "Ministry of Health",
+      "authority_he": "משרד הבריאות",
+      "legal_reference": "Uniform Specification 4.2A, Section 4.7",
       "applicable_conditions": {
-        "always_required": true
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
       },
-      "tags": [
-        "health",
-        "sanitation",
-        "safety",
-        "food"
-      ],
-      "legal_reference": "Chapter 4, Ministry of Health Requirements"
+      "estimated_cost": "3,000-10,000 ILS",
+      "estimated_timeframe": "2-5 days",
+      "severity": "Must have before opening.",
+      "notes": "Failure to maintain the grease trap can result in fines and closure."
     },
     {
       "id": "REG-008",
-      "title": "Gas Installation Safety",
-      "category": "health",
-      "chapter": 4,
+      "title": "Approved Food Suppliers",
+      "title_he": "מקור רכישת המזון",
+      "category": "sanitation_health",
       "priority": "critical",
-      "description": "Kitchens using gas must meet safety standards and obtain gas installation approval",
+      "description": "All food, especially raw materials like meat, poultry, and fish, must be purchased from businesses that hold both a valid business license and a manufacturer's license. This is crucial for food traceability and safety.",
+      "description_he": "רכישת המזון תיעשה מעסק בעל רישיון יצרן ורישיון עסק בר תוקף. מקור חומרי הגלם ומוצרי המזון צריכים להיות מעסק בעלי רישיון יצרן ורישיון עסק.",
       "requirements": [
-        "Licensed gas installer certification",
-        "Gas line inspection and approval",
-        "Ventilation requirements for gas equipment",
-        "Safety shutoff systems",
-        "Annual gas system inspection"
+        "Purchase all food items only from suppliers with a valid business license (רישיון עסק).",
+        "Ensure all raw materials come from a supplier with a valid manufacturer's license (רישיון יצרן).",
+        "Meat, poultry, and fish must be accompanied by a valid veterinary certificate (תעודה וטרינרית).",
+        "Maintain all invoices, delivery slips, and certificates from all suppliers for inspection."
       ],
-      "authority": "Ministry of Health / Gas Authority",
+      "requirements_he": [
+        "רכישת מזון מספקים בעלי רישיון עסק בתוקף בלבד.",
+        "קבלת חומרי גלם מספקים בעלי רישיון יצרן בתוקף.",
+        "בשר, עופות ודגים חייבים להגיע בלווי תעודות וטרינריות.",
+        "שמירת תיעוד (חשבוניות, תעודות משלוח, אישורים) של כל הספקים לביקורת."
+      ],
+      "authority": "Ministry of Health",
+      "authority_he": "משרד הבריאות",
+      "legal_reference": "Uniform Specification 4.2A, Appendix A, Sec 1.1 & 1.7.1",
       "applicable_conditions": {
-        "features": [
-          "kitchen_gas"
-        ]
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
       },
-      "tags": [
-        "gas",
-        "safety",
-        "kitchen",
-        "installation"
-      ],
-      "legal_reference": "Chapter 4, Gas Safety Requirements"
+      "estimated_cost": "Ongoing",
+      "estimated_timeframe": "Ongoing",
+      "severity": "Critical ongoing operational requirement.",
+      "notes": "Using unapproved suppliers is a major violation."
     },
     {
       "id": "REG-009",
-      "title": "Fire Safety Affidavit (Small Establishments)",
-      "category": "fire_affidavit",
-      "chapter": 5,
+      "title": "Refrigerated Food Transport",
+      "title_he": "הובלת מזון בקירור",
+      "category": "sanitation_health",
       "priority": "high",
-      "description": "Small establishments (typically ≤50 sqm) may submit fire safety affidavit instead of full inspection",
+      "description": "All food deliveries to your restaurant must arrive in a vehicle that is licensed for food transport and has appropriate temperature control (refrigeration/freezing). You must check and reject non-compliant deliveries.",
+      "description_he": "יש לבדוק שהרכב המוביל את המזון, יהיה בעל רישיון עסק בתוקף ויעמוד בת\"י 1291 - רכב להובלת מזון בטמפרטורה מבוקרת.",
       "requirements": [
-        "Certified professional affidavit",
-        "Fire extinguishers installed",
-        "Emergency exits marked",
-        "Smoke detectors installed",
-        "Electrical safety compliance"
+        "Receive food only from vehicles licensed for food transport.",
+        "Vehicle must comply with Israeli Standard 1291 for temperature-controlled transport.",
+        "Check and record the temperature of frozen and refrigerated food upon arrival (Sec 1.11.8).",
+        "Reject any delivery that is not at the correct temperature (e.g., frozen food at -18°C or lower, chilled food at +5°C or lower)."
       ],
-      "authority": "Fire and Rescue Authority",
+      "requirements_he": [
+        "קבלת מזון מרכבים בעלי רישיון להובלת מזון בלבד.",
+        "הרכב חייב לעמוד בתקן ישראלי 1291 להובלה בטמפרטורה מבוקרת.",
+        "חובה לבדוק ולתעד טמפרטורה של מזון קפוא ומקורר בעת קבלתו (סעיף 1.11.8).",
+        "דחיית משלוח שאינו בטמפרטורה הנכונה (למשל, מזון קפוא ב-18°C- או פחות, מזון מצונן ב-5°C+ או פחות)."
+      ],
+      "authority": "Ministry of Health",
+      "authority_he": "משרד הבריאות",
+      "legal_reference": "Uniform Specification 4.2A, Appendix A, Sec 1.10.1 & 1.7.7",
       "applicable_conditions": {
-        "business_size": "small"
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
       },
-      "tags": [
-        "fire",
-        "affidavit",
-        "small-business",
-        "safety"
-      ],
-      "legal_reference": "Chapter 5, Fire Safety Affidavit"
+      "estimated_cost": "Ongoing",
+      "estimated_timeframe": "Ongoing",
+      "severity": "High priority for food safety.",
+      "notes": "You are responsible for the food from the moment you accept it."
     },
     {
       "id": "REG-010",
-      "title": "Fire Authority Full Inspection",
-      "category": "fire_authority",
-      "chapter": 6,
+      "title": "Food Storage Temperatures",
+      "title_he": "טמפרטורה ותנאי אחסון מזונות",
+      "category": "sanitation_health",
       "priority": "critical",
-      "description": "Medium and large establishments require full fire authority inspection and approval",
+      "description": "Strict temperatures must be maintained for all stored food to prevent bacterial growth. Refrigerators and freezers must be equipped with accurate thermometers.",
+      "description_he": "מזון קפוא ישמר בטמפרטורה של מינוס 18 מעלות צלזיוס. מזון מצונן ישמר בטמפרטורה של פלוס 5 מעלות צלזיוס מקסימום. מזון חם ישמר בטמפרטורה של מינימום פלוס 65 מעלות צלזיוס.",
       "requirements": [
-        "Fire authority site inspection",
-        "Fire suppression systems",
-        "Emergency evacuation plan",
-        "Fire-resistant materials",
-        "Emergency lighting",
-        "Sprinkler systems (if required by size)",
-        "Fire alarm systems"
+        "Store frozen food at -18°C or lower.",
+        "Store refrigerated (chilled) food at +5°C or lower.",
+        "Store 'Cook-Chill' (בשל/קרר) food at +2°C or lower.",
+        "Hold hot food (for serving) at +65°C or higher.",
+        "All refrigerators/freezers must have an external, visible thermometer.",
+        "Separate raw and cooked foods in storage."
       ],
-      "authority": "Fire and Rescue Authority",
+      "requirements_he": [
+        "אחסון מזון קפוא במינוס 18°C או פחות.",
+        "אחסון מזון מצונן ב-5°C+ או פחות.",
+        "אחסון מזון בשיטת 'בשל/קרר' ב-2°C+ או פחות.",
+        "החזקת מזון חם להגשה ב-65°C+ או יותר.",
+        "כל המקררים והמקפיאים חייבים להיות מצוידים במדחום חיצוני נראה לעין.",
+        "הפרדה בין מזון גולמי למזון מוכן באחסון."
+      ],
+      "authority": "Ministry of Health",
+      "authority_he": "משרד הבריאות",
+      "legal_reference": "Uniform Specification 4.2A, Appendix A, Sec 3.4 & 3.6",
       "applicable_conditions": {
-        "business_size": [
-          "medium",
-          "large"
-        ]
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
       },
-      "tags": [
-        "fire",
-        "inspection",
-        "large-business",
-        "safety"
-      ],
-      "legal_reference": "Chapter 6, Fire Authority Requirements"
+      "estimated_cost": "500-2,000 ILS (for thermometers)",
+      "estimated_timeframe": "Ongoing",
+      "severity": "Critical for food safety. Checked on every inspection.",
+      "notes": null
     },
     {
       "id": "REG-011",
-      "title": "High Capacity Fire Safety",
-      "category": "fire_authority",
-      "chapter": 6,
+      "title": "Separation of Raw and Cooked Food",
+      "title_he": "הפרדה בין מזון מוכן לאכילה לבין המזון הגולמי",
+      "category": "sanitation_health",
       "priority": "critical",
-      "description": "Establishments with high seating capacity (>50 seats) require enhanced fire safety measures",
+      "description": "Strict separation must be maintained between raw food (like meat, poultry) and ready-to-eat food (like salads) to prevent dangerous cross-contamination.",
+      "description_he": "הפרדה בין מזון מוכן לאכילה לבין המזון הגולמי המזוהם... ניתן לבצע, הפרדה זו, באמצעות הקצאה של אזורים נפרדים... תיעשה במשטחי העבודה ובכלים.",
       "requirements": [
-        "Multiple emergency exits",
-        "Emergency exit signage and lighting",
-        "Fire marshal approval",
-        "Evacuation drill plan",
-        "Staff fire safety training"
+        "Designate separate preparation areas (counters, sinks) for raw meat/fish and ready-to-eat foods.",
+        "Use separate, preferably color-coded, cutting boards and utensils for raw and cooked items.",
+        "If using the same equipment is unavoidable, it must be thoroughly washed and sanitized between uses.",
+        "Store raw food *below* cooked food in refrigerators to prevent dripping."
       ],
-      "authority": "Fire and Rescue Authority",
+      "requirements_he": [
+        "הקצאת אזורי עבודה נפרדים לבשר/דגים נאים ולמזון מוכן לאכילה (סלטים וכו').",
+        "שימוש בקרשי חיתוך וכלים נפרדים (מומלץ לפי צבע) למזון גולמי ומוכן.",
+        "במקרה של שימוש באותו ציוד, חובה לשטוף ולחטא אותו היטב בין שימושים.",
+        "אחסן מזון גולמי *מתחת* למזון מוכן במקרר למניעת טפטוף."
+      ],
+      "authority": "Ministry of Health",
+      "authority_he": "משרד הבריאות",
+      "legal_reference": "Uniform Specification 4.2A, Appendix A, Sec 2.1",
       "applicable_conditions": {
-        "seating_capacity": "large"
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
       },
-      "tags": [
-        "fire",
-        "capacity",
-        "evacuation",
-        "safety",
-        "high-capacity"
-      ],
-      "legal_reference": "Chapter 6, High Capacity Requirements"
+      "estimated_cost": "500-1,500 ILS (for cutting boards/utensils)",
+      "estimated_timeframe": "Ongoing",
+      "severity": "Critical for preventing foodborne illness.",
+      "notes": null
     },
     {
       "id": "REG-012",
-      "title": "Outdoor Seating Fire Safety",
-      "category": "fire_authority",
-      "chapter": 6,
-      "priority": "medium",
-      "description": "Outdoor seating areas require specific fire safety considerations",
+      "title": "Safe Thawing of Frozen Food",
+      "title_he": "טיפול נכון בהפשרה",
+      "category": "sanitation_health",
+      "priority": "high",
+      "description": "Food must be thawed safely to prevent bacterial growth. Never thaw food at room temperature (on the counter) or by soaking it in water.",
+      "description_he": "יש לבצע את ההפשרה במקרר או במתקן ייעודי, בטמפרטורה מקסימלית של 10 מעלות צלזיוס. אין להפשיר במים או מחוץ למקרר.",
       "requirements": [
-        "Outdoor area inspection",
-        "Fire extinguisher placement",
-        "Emergency access routes",
-        "Heating equipment approval (if applicable)"
+        "Thaw all frozen food inside a refrigerator (at or below 10°C).",
+        "Never thaw food at room temperature (e.g., on the counter).",
+        "Never thaw food by soaking it in standing water.",
+        "Food must be cooked or used immediately after thawing.",
+        "Never refreeze food that has already been thawed."
       ],
-      "authority": "Fire and Rescue Authority",
+      "requirements_he": [
+        "הפשרת מזון קפוא תתבצע בתוך מקרר (בטמפ' 10°C או פחות).",
+        "לעולם אין להפשיר מזון בטמפרטורת החדר (למשל, על השיש).",
+        "לעולם אין להפשיר מזון על ידי השרייה במים עומדים.",
+        "יש להשתמש במזון שהופשר באופן מידי.",
+        "אין להקפיא מחדש מזון שהופשר."
+      ],
+      "authority": "Ministry of Health",
+      "authority_he": "משרד הבריאות",
+      "legal_reference": "Uniform Specification 4.2A, Appendix A, Sec 2.2.3",
       "applicable_conditions": {
-        "features": [
-          "outdoor"
-        ]
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
       },
-      "tags": [
-        "fire",
-        "outdoor",
-        "safety"
-      ],
-      "legal_reference": "Chapter 6, Outdoor Area Requirements"
+      "estimated_cost": null,
+      "estimated_timeframe": "Ongoing",
+      "severity": "High priority for food safety.",
+      "notes": null
     },
     {
       "id": "REG-013",
-      "title": "Entertainment Venue Safety",
-      "category": "fire_authority",
-      "chapter": 6,
-      "priority": "high",
-      "description": "Establishments with live entertainment require additional safety measures",
+      "title": "Staff Personal Hygiene",
+      "title_he": "היגיינה אישית של עובדי המטבח",
+      "category": "sanitation_health",
+      "priority": "critical",
+      "description": "All kitchen staff must maintain a high level of personal hygiene to prevent contamination of food. This includes proper handwashing, clean attire, and health policies.",
+      "description_he": "יש להקפיד על ההיגיינה האישית של עובדי המטבח. אחד המקורות להעברת מחלות הוא האדם.",
       "requirements": [
-        "Sound system electrical safety",
-        "Stage area fire safety",
-        "Increased capacity management",
-        "Emergency procedures for events",
-        "Security personnel requirements"
+        "Staff must wash hands thoroughly before starting work, after using the toilet, and between handling raw and cooked food.",
+        "Staff must wear clean work clothes and hair coverings (hat or hairnet).",
+        "Eating, drinking, and smoking are strictly forbidden in food preparation areas.",
+        "Staff with open wounds or infectious diseases are not allowed to handle food.",
+        "No jewelry (except a plain wedding band) is allowed on hands or wrists."
       ],
-      "authority": "Fire and Rescue Authority / Police",
+      "requirements_he": [
+        "חובת רחיצת ידיים לפני תחילת עבודה, לאחר ביקור בשירותים, ובמעבר בין מזון גולמי למוכן.",
+        "חובת לבישת בגדי עבודה נקיים וכיסוי ראש (כובע או רשת).",
+        "איסור אכילה, שתיה ועישון באזורי הכנת מזון.",
+        "עובד עם פצע פתוח או מחלה מדבקת לא יטפל במזון.",
+        "אין לענוד עדיים (למעט טבעת נישואין) על הידיים או פרקי הידיים."
+      ],
+      "authority": "Ministry of Health",
+      "authority_he": "משרד הבריאות",
+      "legal_reference": "Uniform Specification 4.2A, Appendix A, Sec 2.6",
       "applicable_conditions": {
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
+      },
+      "estimated_cost": "Ongoing",
+      "estimated_timeframe": "Ongoing",
+      "severity": "Critical ongoing requirement.",
+      "notes": null
+    },
+    {
+      "id": "REG-014",
+      "title": "Pest Control Program",
+      "title_he": "הנחיות להדברה בעסקי מזון",
+      "category": "sanitation_health",
+      "priority": "high",
+      "description": "The business must have an active and documented pest control program managed by a licensed exterminator to prevent insects, rodents, and other pests.",
+      "description_he": "כל פעולות ניהול ההדברה... ירוכזו ע\"י מדביר (אדם העוסק בהדברה בעל היתר הדברה מטעם המשרד לאיכות הסביבה).",
+      "requirements": [
+        "Engage a licensed exterminator (מדביר) with a valid permit.",
+        "Maintain a logbook (יומן ביצוע פעולות הדברה) documenting all visits, chemicals used, and findings.",
+        "Install and maintain monitoring stations (תחנות ניטור) as required.",
+        "Ensure all pesticides used are approved for use in food establishments.",
+        "Prevent all contact between pesticides and food or food-preparation surfaces."
+      ],
+      "requirements_he": [
+        "התקשרות עם מדביר בעל היתר הדברה בתוקף.",
+        "ניהול יומן ביצוע פעולות הדברה (תיעוד ביקורים, חומרים, ממצאים).",
+        "התקנה ותחזוקה של תחנות ניטור.",
+        "שימוש אך ורק בחומרי הדברה המאושרים לשימוש בעסקי מזון.",
+        "מניעה מוחלטת של מגע חומר הדברה עם מזון או משטחי עבודה."
+      ],
+      "authority": "Ministry of Health",
+      "authority_he": "משרד הבריאות",
+      "legal_reference": "Uniform Specification 4.2A, Appendix B, Sec 1",
+      "applicable_conditions": {
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
+      },
+      "estimated_cost": "800-2,000 ILS (annual contract)",
+      "estimated_timeframe": "Ongoing",
+      "severity": "Required for ongoing operation.",
+      "notes": "A separate 'Pest Control File' (תיק הדברה) with all licenses and chemical info must be kept on-site (Sec 13)."
+    },
+    {
+      "id": "REG-015",
+      "title": "Food Delivery Conditions",
+      "title_he": "תנאים לרכב הובלת מזון (משלוח)",
+      "category": "equipment_facilities",
+      "priority": "high",
+      "description": "If the business offers delivery, it must use a vehicle licensed for food transport, and maintain strict temperature and hygiene controls during transit. Maximum delivery time is 3 hours.",
+      "description_he": "הרכב לשליחת המזון יהיה לתכלית זו בלבד. הרכב צריך להיות נקי... ויובל ברכב סגור ובציוד המבטיח שמירת טמפרטורה נאותה. משך הזמן המקסימלי להובלת המזון ללקוח יהיה 3 שעות.",
+      "requirements": [
+        "Use a vehicle licensed specifically for food transport.",
+        "Vehicle must be clean, closed, and equipped with insulated containers to maintain temperature.",
+        "Maximum delivery time from preparation to customer is 3 hours.",
+        "Maintain hot food at +65°C or higher during transport.",
+        "Maintain cold food at +4°C or lower during transport.",
+        "Maintain frozen food at -18°C or lower during transport."
+      ],
+      "requirements_he": [
+        "שימוש ברכב בעל רישיון להובלת מזון (רצוי ייעודי).",
+        "הרכב חייב להיות נקי, סגור, ומצויד במכלים מבודדים לשמירת טמפרטורה.",
+        "זמן הובלה מקסימלי ללקוח - 3 שעות.",
+        "שמירת מזון חם מעל 65°C+ בזמן הובלה.",
+        "שמירת מזון קר מתחת 4°C+ בזמן הובלה.",
+        "שמירת מזון קפוא מתחת 18°C- בזמן הובלה."
+      ],
+      "authority": "Ministry of Health",
+      "authority_he": "משרד הבריאות",
+      "legal_reference": "Uniform Specification 4.2A, Appendix B, Sec 13",
+      "applicable_conditions": {
+        "always_required": false,
+        "business_size": null,
+        "seating_capacity": null,
         "features": [
-          "live_music"
+          "delivery"
         ]
       },
-      "tags": [
-        "fire",
-        "entertainment",
-        "safety",
-        "events",
-        "noise"
+      "estimated_cost": "1,000-5,000 ILS (for insulated containers)",
+      "estimated_timeframe": "Ongoing",
+      "severity": "Critical if delivery service is offered.",
+      "notes": null
+    },
+    {
+      "id": "REG-016",
+      "title": "Employee Restroom Facilities",
+      "title_he": "חדר שירותים לעובדים",
+      "category": "sanitation_health",
+      "priority": "high",
+      "description": "The business must provide clean and accessible restrooms for employees, completely separate from public and food-prep areas, with a separate entryway (מבוא).",
+      "description_he": "בכל עסק יהיה חדר או חדרי שירותים... יהיה מבוא המשמש להפרדה פיזית מוחלטת בינם לבין החדרים שבהם מטפלים במזון.",
+      "requirements": [
+        "Provide a restroom for employees, separate from food areas via an entryway (מבוא).",
+        "Restroom must be equipped with hot and cold running water.",
+        "Must provide liquid soap (סבון נוזלי).",
+        "Must provide single-use paper towels (מגבות נייר) and a waste bin.",
+        "Post clear signs reminding staff to wash their hands."
       ],
-      "legal_reference": "Chapter 6, Entertainment Venue Requirements"
+      "requirements_he": [
+        "הקצאת חדר שירותים לעובדים, עם הפרדה פיזית (מבוא) מאזורי טיפול במזון.",
+        "ציוד השירותים במים זורמים חמים וקרים.",
+        "אספקת סבון נוזלי.",
+        "אספקת מגבות נייר לשימוש חד פעמי ופח אשפה.",
+        "הצבת שלטים המורים על חובת רחיצת ידיים."
+      ],
+      "authority": "Ministry of Health",
+      "authority_he": "משרד הבריאות",
+      "legal_reference": "Uniform Specification 4.2A, Appendix B, Sec 15",
+      "applicable_conditions": {
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
+      },
+      "estimated_cost": "N/A (part of build-out)",
+      "estimated_timeframe": "N/A",
+      "severity": "Must have before opening.",
+      "notes": "This is a fundamental sanitation requirement."
+    },
+    {
+      "id": "REG-017",
+      "title": "Fire Safety (Declaration Track)",
+      "title_he": "בטיחות אש (מסלול תצהיר)",
+      "category": "safety_fire",
+      "priority": "critical",
+      "description": "Small businesses (up to 50 people AND under 150 sqm) can use a simplified 'Declaration Track' for fire safety. This involves submitting a self-declaration and meeting basic equipment requirements.",
+      "description_he": "עסק... והמיועד ל-50 איש לכל היותר ששטחו המבונה עד 150 מ\"ר... ועונה על תנאי מסלול \"אישור על יסוד תצהיר\".",
+      "requirements": [
+        "Install 6kg powder fire extinguishers, including one near the main electrical panel.",
+        "Ensure extinguishers are inspected and maintained annually per Israeli Standard 129.",
+        "Install illuminated 'Exit' signs (שלטי \"יציאה\") with 60-minute battery backup.",
+        "Submit a certificate from a licensed electrician for the electrical system.",
+        "If using Gas (GPL), submit a certificate from a licensed gas technician (per Standard 158).",
+        "Submit all required certificates and a signed declaration (תצהיר) to the Fire Authority."
+      ],
+      "requirements_he": [
+        "התקנת מטפי כיבוי אבקה 6 ק\"ג, כולל אחד ליד לוח החשמל (סעיף 5.5.1).",
+        "תחזוקת מטפים שנתית לפי תקן 129 (סעיף 5.5.2).",
+        "התקנת שלטי \"יציאה\" מוארים עם גיבוי סוללות ל-60 דקות (סעיף 5.4).",
+        "הגשת אישור חשמלאי מוסמך על תקינות מערכת החשמל.",
+        "הגשת אישור טכנאי גז מוסמך (אם קיים גז) לפי תקן 158 (סעיף 5.7).",
+        "הגשת כל האישורים הנדרשים וחתימה על תצהיר לרשות הכבאות."
+      ],
+      "authority": "Fire Department",
+      "authority_he": "הרשות הארצית לכבאות והצלה",
+      "legal_reference": "Uniform Specification 4.2A, Chapter 5",
+      "applicable_conditions": {
+        "always_required": false,
+        "business_size": "large",
+        "seating_capacity": "standard",
+        "features": []
+      },
+      "estimated_cost": "2,000-5,000 ILS",
+      "estimated_timeframe": "1-3 weeks",
+      "severity": "Must have for Fire Dept. approval.",
+      "notes": "This track applies to businesses UP TO 150 sqm ('large' category) and UP TO 50 seats ('standard' category)."
+    },
+    {
+      "id": "REG-018",
+      "title": "Fire Safety (Full License Track)",
+      "title_he": "בטיחות אש (מסלול רישיון מלא)",
+      "category": "safety_fire",
+      "priority": "critical",
+      "description": "Businesses larger than 150 sqm or serving more than 50 people must get a full fire safety license. This requires more complex systems like sprinklers and smoke detection.",
+      "description_he": "עסקים שאינם עומדים בתנאי מסלול התצהיר (פרק 5) חייבים במסלול רישוי מלא הכולל דרישות מקיפות יותר.",
+      "requirements": [
+        "Install automatic sprinkler system if business is > 301 sqm AND serves > 300 people.",
+        "Install automatic fire and smoke detection system if business is > 50 sqm AND serves > 50 people.",
+        "Install fire hydrant cabinets (עמדות כיבוי אש) with hoses if business is > 120 sqm.",
+        "Ensure building elements have at least 2-hour fire resistance.",
+        "Install emergency lighting and illuminated exit signs.",
+        "Submit all required plans and certificates from licensed professionals (engineer, electrician, etc.)."
+      ],
+      "requirements_he": [
+        "התקנת מערכת מתזים (ספרינקלרים) אוטומטית בעסק מעל 301 מ\"ר ו-300 איש (סעיף 6.14.1).",
+        "התקנת מערכת גילוי אש ועשן אוטומטית בעסק מעל 50 מ\"ר ו-50 איש (סעיף 6.15.1).",
+        "התקנת עמדות כיבוי אש (עם זרנוקים) בעסק מעל 120 מ\"ר (סעיף 6.13.2).",
+        "וידוא עמידות אש של שעתיים לפחות לאלמנטים מבניים (סעיף 6.7.1).",
+        "התקנת תאורת חירום ושלטי יציאה מוארים (סעיף 6.10, 6.11).",
+        "הגשת כל התכניות והאישורים מבעלי מקצוע מוסמכים."
+      ],
+      "authority": "Fire Department",
+      "authority_he": "הרשות הארצית לכבאות והצלה",
+      "legal_reference": "Uniform Specification 4.2A, Chapter 6",
+      "applicable_conditions": {
+        "always_required": false,
+        "business_size": "large",
+        "seating_capacity": "large",
+        "features": []
+      },
+      "estimated_cost": "15,000-100,000+ ILS",
+      "estimated_timeframe": "1-3 months",
+      "severity": "Must have for Fire Dept. approval.",
+      "notes": "This applies to any business larger than 150 sqm OR serving more than 50 people."
+    },
+    {
+      "id": "REG-019",
+      "title": "Emergency Exits",
+      "title_he": "דרכי מוצא (פתחי יציאה)",
+      "category": "emergency_exits",
+      "priority": "critical",
+      "description": "The business must have a sufficient number of clearly marked and accessible emergency exits, based on the number of occupants. All exit routes must be kept clear.",
+      "description_he": "בעסק המיועד להכיל עד 50 איש, יהיה פתח יציאה אחד... בעסק המיועד להכיל למעלה מ-50 איש... יהיו לפחות שני פתחי יציאה... דרכי המוצא... יהיו פנויים מכל מכשול.",
+      "requirements": [
+        "Up to 50 people: Minimum 1 exit, 0.9m wide.",
+        "50-500 people: Minimum 2 exits, 1.1m wide each, opening outwards.",
+        "500-1000 people: Minimum 3 exits, 1.1m wide each, opening outwards.",
+        "All exit routes must be kept clear of any obstructions at all times.",
+        "Doors on exit routes must be openable from the inside without a key.",
+        "Install panic bars (ידית בהלה) on exits for occupancy over 100 people (Sec 6.8.1)."
+      ],
+      "requirements_he": [
+        "עד 50 איש: מינימום יציאה 1, רוחב 0.9 מ'.",
+        "50-500 איש: מינימום 2 יציאות, רוחב 1.1 מ' כל אחת, נפתחות החוצה.",
+        "500-1000 איש: מינימום 3 יציאות, רוחב 1.1 מ' כל אחת, נפתחות החוצה.",
+        "כל דרכי המוצא חייבים להיות פנויים ממכשולים בכל עת.",
+        "דלתות בדרך מוצא חייבות להיפתח מבפנים ללא מפתח.",
+        "התקנת ידית בהלה ביציאות המיועדות למעל 100 איש (סעיף 6.8.1)."
+      ],
+      "authority": "Fire Department",
+      "authority_he": "הרשות הארצית לכבאות והצלה",
+      "legal_reference": "Uniform Specification 4.2A, Section 6.9",
+      "applicable_conditions": {
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
+      },
+      "estimated_cost": "N/A (part of build-out)",
+      "estimated_timeframe": "N/A",
+      "severity": "Must have before opening. This is a critical life-safety issue.",
+      "notes": "The number of exits is based on occupancy load, which is a key part of your plan."
+    },
+    {
+      "id": "REG-020",
+      "title": "Gas System (GPL) Safety",
+      "title_he": "מערכת גז (גפ\"מ)",
+      "category": "safety_gas",
+      "priority": "critical",
+      "description": "All gas systems and appliances must meet Israeli Standard 158 and include automatic shut-off devices in case of a leak. This must be certified by a licensed gas technician.",
+      "description_he": "מערכת הגז המשמשת את העסק תענה לנדרש בתקן ישראלי ת\"י 158... על כל המכשירים... יותקנו התקנים להפסקת זרימת גז במקרה של דליפה, כולל ניתוק מקורות אנרגיה.",
+      "requirements": [
+        "Ensure the entire gas system (GPL) complies with Israeli Standard 158.",
+        "Install automatic gas shut-off devices on all appliances, linked to a leak detector.",
+        "Ensure all gas pipes are flexible, reinforced metal (פלב\"מ).",
+        "Obtain a certificate from a licensed gas technician confirming compliance.",
+        "Ensure kitchen hoods have an automatic fire extinguishing system (see REG-021)."
+      ],
+      "requirements_he": [
+        "מערכת הגז חייבת לעמוד בתקן ישראלי 158.",
+        "התקנת התקני ניתוק גז אוטומטיים לכל המכשירים, מחוברים לגלאי דליפה.",
+        "שימוש בצינורות גז גמישים ומוגנים (פלב\"מ).",
+        "קבלת אישור טכנאי גז מוסמך על תקינות המערכת.",
+        "לוודא קיום מערכת כיבוי אש אוטומטית במנדפים (ראה REG-021)."
+      ],
+      "authority": "Fire Department",
+      "authority_he": "הרשות הארצית לכבאות והצלה",
+      "legal_reference": "Uniform Specification 4.2A, Section 6.23",
+      "applicable_conditions": {
+        "always_required": false,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": [
+          "gas"
+        ]
+      },
+      "estimated_cost": "3,000-10,000 ILS (for detectors and certification)",
+      "estimated_timeframe": "1-2 weeks",
+      "severity": "Must have before opening. Critical fire and explosion risk.",
+      "notes": null
+    },
+    {
+      "id": "REG-021",
+      "title": "Kitchen Hood Fire Suppression",
+      "title_he": "מערכת כיבוי במנדפים",
+      "category": "safety_fire",
+      "priority": "critical",
+      "description": "If your kitchen uses cooking appliances that produce grease-laden vapors (e.g., fryers, grills), the hoods (מנדפים) above them *must* be equipped with an automatic fire extinguishing system.",
+      "description_he": "אם קיימים מנדפים בעסק - יש להתקין מערכת כיבוי במנדפים בהתאם לתקן ישראלי ת\"י 5356, חלק 2, מערכות כיבוי אש: כיבוי אש בכימיקלים רטובים, כולל ניתוק ממקור אנרגיה.",
+      "requirements": [
+        "Install an automatic wet chemical fire extinguishing system in all kitchen hoods.",
+        "The system must comply with Israeli Standard 5356, Part 2.",
+        "The system must automatically shut off the energy source (gas/electric) to the appliance upon activation.",
+        "Obtain a certificate from an authorized installer confirming compliance."
+      ],
+      "requirements_he": [
+        "התקנת מערכת כיבוי אש אוטומטית (כימיקלים רטובים) בכל המנדפים במטבח.",
+        "המערכת חייבת לעמוד בתקן ישראלי 5356, חלק 2.",
+        "המערכת חייבת לנתק את מקור האנרגיה (גז/חשמל) למכשיר אוטומטית בעת הפעלה.",
+        "קבלת אישור ממתקין מוסמך על עמידה בתקן."
+      ],
+      "authority": "Fire Department",
+      "authority_he": "הרשות הארצית לכבאות והצלה",
+      "legal_reference": "Uniform Specification 4.2A, Section 6.23.4",
+      "applicable_conditions": {
+        "always_required": false,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": [
+          "gas"
+        ]
+      },
+      "estimated_cost": "4,000-10,000 ILS",
+      "estimated_timeframe": "1-2 weeks",
+      "severity": "Must have before opening.",
+      "notes": "This applies to any commercial cooking, not just gas. 'gas' is used as the closest feature."
+    },
+    {
+      "id": "REG-022",
+      "title": "Emergency Lighting System",
+      "title_he": "תאורת חירום",
+      "category": "emergency_exits",
+      "priority": "critical",
+      "description": "An emergency lighting system must be installed to illuminate all exit routes (corridors, stairs, and exits) in the event of a power failure.",
+      "description_he": "בעסק תותקן תאורת חירום שתתחיל לפעול ותאיר את נתיב המילוט במקרה של כשל באספקת החשמל או נפילה במתח החשמל.",
+      "requirements": [
+        "Install emergency lights over all exits and along all exit routes.",
+        "System must activate automatically on power failure.",
+        "Must be powered by rechargeable batteries or a central generator.",
+        "System must comply with Israeli Standard 20, Part 2.22.",
+        "Obtain a certificate from a licensed electrician confirming proper installation and function."
+      ],
+      "requirements_he": [
+        "התקנת תאורת חירום מעל כל פתחי היציאה ולאורך דרכי המוצא.",
+        "המערכת חייבת לפעול אוטומטית במקרה של הפסקת חשמל.",
+        "הפעלה על ידי סוללות נטענות או גנרטור מרכזי (סעיף 6.11.3).",
+        "עמידה בתקן ישראלי 20, חלק 2.22.",
+        "קבלת אישור חשמלאי מוסמך על תקינות המערכת."
+      ],
+      "authority": "Fire Department",
+      "authority_he": "הרשות הארצית לכבאות והצלה",
+      "legal_reference": "Uniform Specification 4.2A, Section 6.11",
+      "applicable_conditions": {
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
+      },
+      "estimated_cost": "1,500-5,000 ILS",
+      "estimated_timeframe": "1-3 days",
+      "severity": "Must have before opening.",
+      "notes": null
+    },
+    {
+      "id": "REG-023",
+      "title": "Electrical System Inspection",
+      "title_he": "בדיקת מערכת החשמל",
+      "category": "structural_building",
+      "priority": "critical",
+      "description": "The entire electrical system must be inspected and certified by a licensed electrician to ensure it complies with all laws and is safe for operation. This is required for both Ministry of Health and Fire Dept. approval.",
+      "description_he": "מערכת החשמל המתוקנת במקום תעשה בהתאמה לחוק החשמל... ותיבדק אחת לחמש שנים. יש להגיש אישור חשמלאי מוסמך.",
+      "requirements": [
+        "Obtain a certificate from a licensed electrician confirming the system is installed correctly and is safe.",
+        "The certificate must list all electrical panels, their locations, and amperage.",
+        "Install a sign 'חשמל, לא לכבות במים' (Electricity, Do Not Extinguish with Water) on all electrical panels.",
+        "Install an emergency shut-off switch in a visible, accessible location (for businesses > 200 people).",
+        "Perform a certified inspection every 5 years."
+      ],
+      "requirements_he": [
+        "קבלת אישור חשמלאי מוסמך על תקינות מערכת החשמל.",
+        "האישור חייב לפרט מיקום וגודל (אמפר) של כל לוחות החשמל.",
+        "התקנת שלט 'חשמל, לא לכבות במים' על כל לוחות החשמל.",
+        "התקנת מפסק חירום ראשי במקום נגיש (לעסקים מעל 200 איש, סעיף 6.16.4).",
+        "ביצוע בדיקה תקופתית על ידי חשמלאי מוסמך כל 5 שנים (סעיף 5.6.3)."
+      ],
+      "authority": "Fire Department",
+      "authority_he": "הרשות הארצית לכבאות והצלה",
+      "legal_reference": "Uniform Specification 4.2A, Section 5.6 & 6.16 & 6.24.4",
+      "applicable_conditions": {
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
+      },
+      "estimated_cost": "1,000-2,500 ILS (for inspection)",
+      "estimated_timeframe": "1-2 days",
+      "severity": "Must have before opening.",
+      "notes": "This is one of the most common points of failure in inspections."
+    },
+    {
+      "id": "REG-024",
+      "title": "No-Smoking Policy and Signage",
+      "title_he": "מניעת עישון",
+      "category": "permits_licenses",
+      "priority": "medium",
+      "description": "The business must post signs indicating that smoking is prohibited, in accordance with the Prevention of Smoking in Public Places Act. Ashtrays may not be placed in non-smoking areas.",
+      "description_he": "בעל העסק יקבע בעסק שלטים המורים על איסור העישון בהתאם להוראות חוק למניעת העישון... בעל העסק לא יציב מאפרה בתחום העסק (למעט במקום נפרד שהוקצה לעישון).",
+      "requirements": [
+        "Post clear signs prohibiting smoking, as required by law.",
+        "Do not place ashtrays in any non-smoking area of the business.",
+        "A separate, fully enclosed smoking room may be designated, but only if it meets all specific legal requirements."
+      ],
+      "requirements_he": [
+        "הצבת שלטים ברורים המורים על איסור עישון.",
+        "אין להציב מאפרות בשטח העסק (מחוץ לאזור עישון מוגדר).",
+        "ניתן להקצות חדר עישון נפרד לחלוטין, רק אם עומד בתנאי החוק (סעיף 4.5.3)."
+      ],
+      "authority": "Ministry of Health",
+      "authority_he": "משרד הבריאות",
+      "legal_reference": "Uniform Specification 4.2A, Section 4.5",
+      "applicable_conditions": {
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
+      },
+      "estimated_cost": "100-300 ILS",
+      "estimated_timeframe": "1 day",
+      "severity": "Required for operation.",
+      "notes": null
+    },
+    {
+      "id": "REG-025",
+      "title": "Staff Food Handler Training",
+      "title_he": "הדרכת עובדי מטבח",
+      "category": "sanitation_health",
+      "priority": "high",
+      "description": "All kitchen staff must receive training in food safety and hygiene as required by the Ministry of Health. At least one senior staff member must have completed a certified food safety course (e.g., HACCP).",
+      "description_he": "במטבח יימצאו עובדים, שעברו הדרכה לטיפול במזון על פי דרישת המנהל. במטבח ימצא עובד בכיר אחד לפחות, שעבר השתלמות בנושא איכות טיפול במזון (על-פי תכנית ההדרכה של משרד הבריאות ו/או HACCP).",
+      "requirements": [
+        "Ensure all staff handling food have received basic hygiene training.",
+        "Ensure at least one senior employee has completed a certified food safety course (HACCP or Ministry of Health equivalent).",
+        "Maintain records and certificates of staff training for inspection."
+      ],
+      "requirements_he": [
+        "לוודא שכל העובדים עברו הדרכה בסיסית לטיפול במזון.",
+        "לוודא שעובד בכיר אחד לפחות עבר השתלמות מוכרת (HACCP או שווה ערך של משרד הבריאות).",
+        "שמירת תיעוד ואישורי הדרכות לביקורת."
+      ],
+      "authority": "Ministry of Health",
+      "authority_he": "משרד הבריאות",
+      "legal_reference": "Uniform Specification 4.2A, Appendix A, Sec 2.6.1",
+      "applicable_conditions": {
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
+      },
+      "estimated_cost": "500-2,000 ILS (for certified course)",
+      "estimated_timeframe": "Ongoing",
+      "severity": "Required for ongoing operation.",
+      "notes": null
+    },
+    {
+      "id": "REG-026",
+      "title": "Grease Hood & Duct Cleaning",
+      "title_he": "ניקוי ארובות ומנדפים",
+      "category": "safety_fire",
+      "priority": "high",
+      "description": "Kitchen hoods and ducts must be professionally cleaned regularly to prevent fire hazards, in accordance with Israeli Standard 1001.",
+      "description_he": "אישור על ניקוי ארובות ומנדפים בהתאם לדרישות תקן ישראלי ת\"י 1001, חלק 6... אוורור והגנה מפני אש במערכות בישול מסחריות.",
+      "requirements": [
+        "Schedule professional cleaning of all kitchen hoods and exhaust ducts.",
+        "Cleaning frequency depends on usage (e.g., every 3-6 months for heavy use).",
+        "Ensure cleaning complies with Israeli Standard 1001, Part 6.",
+        "Obtain and keep a certificate from the cleaning company after each service."
+      ],
+      "requirements_he": [
+        "ביצוע ניקוי מקצועי של כל המנדפים ומערכות יניקת העשן.",
+        "תדירות הניקוי תלויה בהיקף השימוש (לרוב כל 3-6 חודשים).",
+        "הניקוי חייב להתבצע בהתאם לתקן ישראלי 1001, חלק 6.",
+        "קבלת ושמירת אישור מחברת הניקוי לאחר כל טיפול."
+      ],
+      "authority": "Fire Department",
+      "authority_he": "הרשות הארצית לכבאות והצלה",
+      "legal_reference": "Uniform Specification 4.2A, Section 6.24.15",
+      "applicable_conditions": {
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
+      },
+      "estimated_cost": "1,500-4,000 ILS (per cleaning)",
+      "estimated_timeframe": "Ongoing",
+      "severity": "Required for fire safety. A major fire hazard if ignored.",
+      "notes": "This is separate from the daily filter cleaning done by staff."
+    },
+    {
+      "id": "REG-027",
+      "title": "Fire & Smoke Detection System",
+      "title_he": "מערכת גילוי אש ועשן",
+      "category": "safety_fire",
+      "priority": "critical",
+      "description": "An automatic fire and smoke detection system must be installed in businesses serving over 50 people or larger than 50 sqm. This system must be certified and maintained.",
+      "description_he": "בעסק תותקן מערכת גילוי אש ועשן... במקרים הבאים: (1) בעסק ששטחו הכולל מעל 50 מ\"ר והמיועד לשמש מעל 50 איש.",
+      "requirements": [
+        "Install an automatic fire and smoke detection system (complying with Standard 1220).",
+        "The system must cover all parts of the business.",
+        "The system must be maintained in good working order at all times.",
+        "Obtain a certificate of inspection and compliance from an authorized installer."
+      ],
+      "requirements_he": [
+        "התקנת מערכת גילוי אש ועשן אוטומטית (לפי תקן 1220).",
+        "המערכת חייבת להיות פרוסה בכל חלקי העסק.",
+        "המערכת חייבת להיות מתוחזקת ובמצב תקין בכל עת.",
+        "קבלת אישור תקינות ממתקין מוסמך."
+      ],
+      "authority": "Fire Department",
+      "authority_he": "הרשות הארצית לכבאות והצלה",
+      "legal_reference": "Uniform Specification 4.2A, Section 6.15.1",
+      "applicable_conditions": {
+        "always_required": false,
+        "business_size": "medium",
+        "seating_capacity": "standard",
+        "features": []
+      },
+      "estimated_cost": "3,000-10,000 ILS",
+      "estimated_timeframe": "1-2 weeks",
+      "severity": "Must have before opening.",
+      "notes": "Applies if EITHER condition (50+ sqm OR 50+ people) is met."
+    },
+    {
+      "id": "REG-028",
+      "title": "Automatic Sprinkler System",
+      "title_he": "מערכת מתזים (ספרינקלרים)",
+      "category": "safety_fire",
+      "priority": "critical",
+      "description": "An automatic water sprinkler system is required for large businesses (over 301 sqm AND serving over 300 people) or those in buildings with low fire resistance.",
+      "description_he": "תותקן מערכת כיבוי אש אוטומטית במים... (1) בעסק ששטחו הכולל מעל 301 מ\"ר והמיועד לשמש מעל 300 איש.",
+      "requirements": [
+        "Install an automatic sprinkler system compliant with Israeli Standard 1596.",
+        "The system design must be approved by an engineer and the Fire Dept.",
+        "The system must be inspected and certified annually (per Standard 1928)."
+      ],
+      "requirements_he": [
+        "התקנת מערכת מתזים (ספרינקלרים) אוטומטית לפי תקן 1596.",
+        "תכנון המערכת חייב להיות מאושר על ידי מהנדס ורשות הכבאות.",
+        "ביצוע בדיקה ואישור שנתי למערכת (לפי תקן 1928)."
+      ],
+      "authority": "Fire Department",
+      "authority_he": "הרשות הארצית לכבאות והצלה",
+      "legal_reference": "Uniform Specification 4.2A, Section 6.14.1",
+      "applicable_conditions": {
+        "always_required": false,
+        "business_size": "large",
+        "seating_capacity": "large",
+        "features": []
+      },
+      "estimated_cost": "20,000-80,000 ILS",
+      "estimated_timeframe": "1-2 months",
+      "severity": "Must have before opening.",
+      "notes": "This applies only if *both* conditions (301+ sqm AND 300+ people) are met."
+    },
+    {
+      "id": "REG-029",
+      "title": "Waste Disposal",
+      "title_he": "סילוק פסולת",
+      "category": "sanitation_health",
+      "priority": "high",
+      "description": "A dedicated, approved waste disposal solution is required. All waste containers must be sealed, clean, and stored in a designated area away from food.",
+      "description_he": "פתרון סילוק פסולת יהיה תואם לחלק ו' לתקנות התכנון והבנייה... וימנע מטרדים סביבתיים ובריאותיים.",
+      "requirements": [
+        "All waste must be collected in sealed containers (with lids) to prevent pests.",
+        "Waste containers must be made of hard, non-absorbent, and cleanable material.",
+        "Waste must be stored in a designated room or area, separate from food storage and preparation.",
+        "The waste area must be kept clean and in good condition.",
+        "Sensitive food waste (e.g., expired meat) must be stored separately and marked 'לא ראוי למאכל אדם'."
+      ],
+      "requirements_he": [
+        "איסוף כל הפסולת במכלי קיבול סגורים (עם מכסים) למניעת מזיקים.",
+        "מכלי הקיבול יהיו עשויים חומר קשיח, בלתי סופג, וניתן לניקוי.",
+        "אחסון הפסולת יתבצע בחדר או אזור ייעודי, נפרד מאחסון והכנת מזון.",
+        "שמירה על ניקיון ותקינות אזור האשפה.",
+        "פסולת מזון רגיש (כגון בשר פג תוקף) תישמר בנפרד ותסומן 'לא ראוי למאכל אדם'."
+      ],
+      "authority": "Ministry of Health / Municipality",
+      "authority_he": "משרד הבריאות / עירייה",
+      "legal_reference": "Uniform Specification 4.2A, Section 4.10.3 & Appendix B, Sec 14",
+      "applicable_conditions": {
+        "always_required": true,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": []
+      },
+      "estimated_cost": "500-2,000 ILS (for containers)",
+      "estimated_timeframe": "Ongoing",
+      "severity": "Required for sanitation approval.",
+      "notes": null
+    },
+    {
+      "id": "REG-030",
+      "title": "Outdoor Seating (Police)",
+      "title_he": "הגשת משקאות משכרים בחוץ",
+      "category": "permits_licenses",
+      "priority": "medium",
+      "description": "If serving alcohol at temporary or outdoor events (under the open sky), all beverages (alcoholic and non-alcoholic) must be served in soft plastic cups only.",
+      "description_he": "כאשר מדובר באירועים תחת כיפת השמיים או באירועים ארעיים, מכירה והצריכה של כל סוגי המשקאות (משכרים ושאינם משכרים) תהיה בכוסות פלסטיק לא קשיח בלבד.",
+      "requirements": [
+        "Serve all beverages (including soft drinks) in soft, non-hard plastic cups."
+      ],
+      "requirements_he": [
+        "הגשת כל המשקאות (כולל קלים) בכוסות פלסטיק לא קשיח בלבד."
+      ],
+      "authority": "משטרת ישראל",
+      "authority_he": "משטרת ישראל",
+      "legal_reference": "Uniform Specification 4.2A, Section 3.6.2",
+      "applicable_conditions": {
+        "always_required": false,
+        "business_size": null,
+        "seating_capacity": null,
+        "features": [
+          "outdoor",
+          "alcohol"
+        ]
+      },
+      "estimated_cost": "Ongoing (cost of cups)",
+      "estimated_timeframe": "Ongoing",
+      "severity": "Required for police approval of outdoor/temporary events.",
+      "notes": "This is a specific police requirement to prevent injuries from broken glass or hard plastic."
     }
-  ],
-  "statistics": {
-    "total_regulations": 13,
-    "critical_priority": 7,
-    "high_priority": 4,
-    "medium_priority": 2,
-    "low_priority": 0
-  }
+  ]
 }
