@@ -18,7 +18,7 @@ class GeminiService:
     def __init__(self):
         """Initialize Gemini service"""
         self.api_key = os.getenv('GEMINI_API_KEY')
-        self.model_name = 'gemini-1.5-flash'
+        self.model_name = 'gemini-2.5-pro'
         self.mock_mode = False
         
         if not self.api_key:
