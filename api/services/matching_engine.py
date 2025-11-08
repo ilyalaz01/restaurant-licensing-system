@@ -54,7 +54,44 @@ class MatchingEngine:
         if conditions.get("always_required"):
             return True
         
-        # Size-based regulations
+        # === NEW: Threshold-based matching (more accurate than categories) ===
+        if "size_threshold" in conditions or "seating_threshold" in conditions:
+            size_ok = True
+            seating_ok = True
+            
+            # Check size threshold
+            if "size_threshold" in conditions:
+                threshold = conditions["size_threshold"]
+                size_ok = business.size_sqm >= threshold
+            
+            # Check seating threshold
+            if "seating_threshold" in conditions:
+                threshold = conditions["seating_threshold"]
+                seating_ok = business.seating_capacity >= threshold
+            
+            # Determine if BOTH conditions required (AND) or EITHER (OR)
+            requires_both = conditions.get("requires_both", False)
+            
+            if requires_both:
+                # Both conditions must be met (AND logic)
+                if "size_threshold" in conditions and "seating_threshold" in conditions:
+                    return size_ok and seating_ok
+                # Only one threshold specified
+                elif "size_threshold" in conditions:
+                    return size_ok
+                else:
+                    return seating_ok
+            else:
+                # Either condition can trigger it (OR logic)
+                if "size_threshold" in conditions and "seating_threshold" in conditions:
+                    return size_ok or seating_ok
+                # Only one threshold specified
+                elif "size_threshold" in conditions:
+                    return size_ok
+                else:
+                    return seating_ok
+        
+        # === LEGACY: Category-based matching (kept for backward compatibility) ===
         if "business_size" in conditions:
             req_size = conditions["business_size"]
             if req_size == "all":
@@ -62,39 +99,94 @@ class MatchingEngine:
             if req_size == business.size_category:
                 return True
         
-        # Feature-based regulations
+        # === Feature-based regulations (IMPROVED) ===
         if "features" in conditions:
             req_features = conditions["features"]
-            if isinstance(req_features, list):
-                for feature in req_features:
-                    if feature in business.features:
-                        return True
+            if isinstance(req_features, list) and len(req_features) > 0:
+                # Check if ALL features required (AND logic)
+                requires_all = conditions.get("requires_all_features", False)
+                
+                if requires_all:
+                    # Business must have ALL required features
+                    return all(feature in business.features for feature in req_features)
+                else:
+                    # Business must have at least ONE required feature
+                    return any(feature in business.features for feature in req_features)
         
-        # Check tags for feature matching
+        # === Tag-based matching (fallback for features) ===
         tags = regulation.get("tags", [])
+        
+        # Check if business features match regulation tags
         for feature in business.features:
             if feature in tags:
                 return True
-            # Special cases
-            if feature == "alcohol" and "alcohol" in tags:
-                return True
-            if feature == "outdoor" and "outdoor" in tags:
-                return True
-            if feature == "kitchen_gas" and ("gas" in tags or "safety" in tags):
-                return True
-            if feature == "live_music" and ("entertainment" in tags or "noise" in tags):
-                return True
+            
+            # Special feature-to-tag mappings
+            feature_tag_map = {
+                "alcohol": ["alcohol"],
+                "outdoor": ["outdoor", "temporary"],
+                "kitchen_gas": ["gas", "safety"],
+                "live_music": ["entertainment", "noise", "music"],
+                "delivery": ["delivery", "takeout"]
+            }
+            
+            if feature in feature_tag_map:
+                if any(tag in tags for tag in feature_tag_map[feature]):
+                    return True
         
-        # Size thresholds
+        # === Size/Seating thresholds via tags (legacy fallback) ===
+        # Large businesses
         if business.size_sqm > 150 and "large" in tags:
             return True
         
-        # Seating capacity thresholds  
+        # High capacity businesses
         if business.seating_capacity > 50 and "high-capacity" in tags:
             return True
         
-        # Default: include if it's a general requirement
+        # === General/Cross-sectional regulations ===
+        # These apply to all businesses in certain categories
         if regulation.get("category") in ["general_definitions", "cross_sectional"]:
             return True
         
+        # Default: does not apply
         return False
+    
+    def get_regulation_summary(self, matched_regulations: List[Dict]) -> Dict:
+        """
+        Generate a summary of matched regulations
+        
+        Args:
+            matched_regulations: List of matched regulations
+        
+        Returns:
+            Summary dictionary with counts and breakdowns
+        """
+        
+        summary = {
+            "total_count": len(matched_regulations),
+            "by_priority": {"critical": 0, "high": 0, "medium": 0, "low": 0},
+            "by_category": {},
+            "estimated_total_cost": 0,
+        }
+        
+        for reg in matched_regulations:
+            # Count by priority
+            priority = reg.get("priority", "low")
+            summary["by_priority"][priority] += 1
+            
+            # Count by category
+            category = reg.get("category", "other")
+            summary["by_category"][category] = summary["by_category"].get(category, 0) + 1
+            
+            # Sum estimated costs (parse string costs)
+            cost_str = reg.get("estimated_cost", "0")
+            if cost_str and cost_str != "Ongoing":
+                try:
+                    # Extract first number from cost string (e.g., "5,000-15,000 ILS" -> 5000)
+                    cost_parts = cost_str.replace(",", "").split("-")
+                    min_cost = int(''.join(filter(str.isdigit, cost_parts[0])))
+                    summary["estimated_total_cost"] += min_cost
+                except (ValueError, IndexError):
+                    pass
+        
+        return summary

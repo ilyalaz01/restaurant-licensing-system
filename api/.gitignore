@@ -1,0 +1,17 @@
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# --- Virtual environments ---
+venv/
+env/
+.venv/
+
+
+
+# --- Ignore specific large/generated files ---
+18-07-2022_4.2A*
+
