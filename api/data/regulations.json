@@ -253,7 +253,7 @@
       "title": "Approved Food Suppliers",
       "title_he": "מקור רכישת המזון",
       "category": "sanitation_health",
-      "priority": "critical",
+      "priority": "high",
       "description": "All food, especially raw materials like meat, poultry, and fish, must be purchased from businesses that hold both a valid business license and a manufacturer's license. This is crucial for food traceability and safety.",
       "description_he": "רכישת המזון תיעשה מעסק בעל רישיון יצרן ורישיון עסק בר תוקף. מקור חומרי הגלם ומוצרי המזון צריכים להיות מעסק בעלי רישיון יצרן ורישיון עסק.",
       "requirements": [
@@ -321,7 +321,7 @@
       "title": "Food Storage Temperatures",
       "title_he": "טמפרטורה ותנאי אחסון מזונות",
       "category": "sanitation_health",
-      "priority": "critical",
+      "priority": "high",
       "description": "Strict temperatures must be maintained for all stored food to prevent bacterial growth. Refrigerators and freezers must be equipped with accurate thermometers.",
       "description_he": "מזון קפוא ישמר בטמפרטורה של מינוס 18 מעלות צלזיוס. מזון מצונן ישמר בטמפרטורה של פלוס 5 מעלות צלזיוס מקסימום. מזון חם ישמר בטמפרטורה של מינימום פלוס 65 מעלות צלזיוס.",
       "requirements": [
@@ -359,7 +359,7 @@
       "title": "Separation of Raw and Cooked Food",
       "title_he": "הפרדה בין מזון מוכן לאכילה לבין המזון הגולמי",
       "category": "sanitation_health",
-      "priority": "critical",
+      "priority": "high",
       "description": "Strict separation must be maintained between raw food (like meat, poultry) and ready-to-eat food (like salads) to prevent dangerous cross-contamination.",
       "description_he": "הפרדה בין מזון מוכן לאכילה לבין המזון הגולמי המזוהם... ניתן לבצע, הפרדה זו, באמצעות הקצאה של אזורים נפרדים... תיעשה במשטחי העבודה ובכלים.",
       "requirements": [
@@ -429,7 +429,7 @@
       "title": "Staff Personal Hygiene",
       "title_he": "היגיינה אישית של עובדי המטבח",
       "category": "sanitation_health",
-      "priority": "critical",
+      "priority": "high",
       "description": "All kitchen staff must maintain a high level of personal hygiene to prevent contamination of food. This includes proper handwashing, clean attire, and health policies.",
       "description_he": "יש להקפיד על ההיגיינה האישית של עובדי המטבח. אחד המקורות להעברת מחלות הוא האדם.",
       "requirements": [
