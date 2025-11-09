@@ -468,7 +468,7 @@ Write the steps now:"""
                 "critical": len([r for r in regulations if r.get('priority') == 'critical']),
                 "high": len([r for r in regulations if r.get('priority') == 'high']),
                 "medium": len([r for r in regulations if r.get('priority') == 'medium']),
-                "low": len([r for r in regulations if r.get('priority')_ == 'low'])
+                "low": len([r for r in regulations if r.get('priority') == 'low'])
             },
             
             "estimated_timeline": estimated_timeline,
