@@ -4,7 +4,7 @@
 
 An intelligent system that helps restaurant owners in Israel understand and navigate licensing requirements through a simple questionnaire and AI-generated compliance reports.
 
-[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://restaurant-licensing-system-tz3z.vercel.app)
+[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://restaurant-licensing-system.vercel.app/)
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://python.org)
 [![React](https://img.shields.io/badge/react-18.0+-blue.svg)](https://react.dev)
 
