@@ -5,7 +5,8 @@ AI enhances content while preserving clean structure
 
 import os
 import json
-from typing import Dict, List, Any, Optional
+import re
+from typing import Dict, List, Any, Optional, Tuple
 from datetime import datetime
 import google.generativeai as genai
 from dotenv import load_dotenv
@@ -42,17 +43,16 @@ class GeminiService:
         AI personalizes content but keeps clean formatting
         """
         
-        # --- FIX 1: Calculate timeline FIRST ---
-        # This calculation is now based on your sample results
+        # --- FIX: Calculate BOTH timeline and cost FIRST ---
         estimated_timeline = self._estimate_timeline(business_details, matched_regulations)
+        estimated_cost = self._calculate_total_cost(matched_regulations)
             
         if self.mock_mode:
-            # Pass the estimated timeline even to the mock report
-            return self._generate_mock_report(business_details, matched_regulations, estimated_timeline)
+            return self._generate_mock_report(business_details, matched_regulations, estimated_timeline, estimated_cost)
         
         try:
-            # --- FIX 2: Pass timeline to summary generator ---
-            summary = await self._generate_personalized_summary(business_details, matched_regulations, estimated_timeline)
+            # --- FIX: Pass BOTH timeline and cost to summary generator ---
+            summary = await self._generate_personalized_summary(business_details, matched_regulations, estimated_timeline, estimated_cost)
             
             # Enhance each regulation (preserve structure but personalize text)
             enhanced_regulations = await self._enhance_regulations(business_details, matched_regulations)
@@ -93,6 +93,7 @@ class GeminiService:
                 },
                 
                 "estimated_timeline": estimated_timeline, # Use the calculated value
+                "estimated_cost": estimated_cost, # Use the calculated value
                 "ai_generated": True,
                 "ai_model": self.model_name
             }
@@ -103,16 +104,15 @@ class GeminiService:
             print(f"Error generating AI report: {e}")
             import traceback
             traceback.print_exc()
-            # Pass estimated_timeline to the fallback as well
-            return self._generate_fallback_report(business_details, matched_regulations, estimated_timeline)
+            return self._generate_fallback_report(business_details, matched_regulations, estimated_timeline, estimated_cost)
     
-    async def _generate_personalized_summary(self, business: Any, regulations: List[Dict], estimated_timeline: str) -> str:
+    async def _generate_personalized_summary(self, business: Any, regulations: List[Dict], estimated_timeline: str, estimated_cost: str) -> str:
         """Generate personalized summary paragraph"""
         
         features = ", ".join(business.features) if business.features else "standard operations"
         location = getattr(business, 'location_city', 'Israel')
         
-        # --- FIX 3: Update the prompt to use the timeline variable ---
+        # --- FIX: Update prompt to use BOTH variables ---
         prompt = f"""You are a helpful business licensing consultant in Israel.
 
 Write a friendly, personalized welcome message for a restaurant owner in ENGLISH.
@@ -125,11 +125,14 @@ Seating: {business.seating_capacity} seats
 Features: {features}
 Number of requirements: {len(regulations)}
 
+Your calculated realistic timeline is: {estimated_timeline}
+Your total estimated cost range is: {estimated_cost}
+
 Write 2-3 sentences that:
 1. Welcome the owner by name and mention their restaurant
 2. Acknowledge their specific situation (size, location, features)
-3. Give them confidence and explain what they need to do
-4. Mention their specific realistic timeline: {estimated_timeline}
+3. Give them confidence and state the number of requirements
+4. Mention their specific realistic timeline AND the total estimated cost.
 
 Use simple, encouraging language. Write in ENGLISH only.
 Do not use markdown or special formatting.
@@ -140,8 +143,10 @@ Just write the text directly."""
             return response.text.strip()
         except Exception as e:
             print(f"Summary generation failed: {e}")
-            # Fallback summary also uses the calculated timeline
-            return f"Welcome, {business.owner_name}! Based on your restaurant '{business.business_name}' with {business.size_sqm} sqm and features like {features}, you'll need to complete {len(regulations)} licensing requirements. This process typically takes {estimated_timeline} with proper planning."
+            # Fallback summary also uses the calculated values
+            return (f"Welcome, {business.owner_name}! Based on your restaurant '{business.business_name}' with {business.size_sqm} sqm and features like {features}, "
+                    f"you'll need to complete {len(regulations)} licensing requirements. This process typically takes {estimated_timeline} "
+                    f"with an estimated total cost of {estimated_cost}.")
     
     async def _enhance_regulations(self, business: Any, regulations: List[Dict]) -> List[Dict]:
         """
@@ -317,30 +322,70 @@ Write the steps now:"""
                 "7. Follow up weekly with authorities and respond promptly to requests",
                 "8. Once approved, display your business license prominently at entrance"
             ]
-    
-    # --- FIX 4: New timeline logic based on your sample results ---
+
+    # --- NEW HELPER METHOD ---
+    @staticmethod
+    def _parse_cost_range(cost_str: Optional[str]) -> Tuple[int, int]:
+        """Parses a cost string like '5,000-15,000 ILS' into (min, max) integers"""
+        if not cost_str or "Ongoing" in cost_str:
+            return 0, 0
+        
+        # Clean string: remove notes, currency symbols, commas
+        cost_str = re.sub(r"\(.*\)", "", cost_str) # Remove (notes)
+        cost_str = cost_str.replace('ILS', '').replace('₪', '').replace(',', '').strip()
+        
+        if '-' in cost_str:
+            parts = cost_str.split('-')
+            try:
+                low = int(parts[0])
+                high = int(parts[1])
+                return low, high
+            except (ValueError, IndexError):
+                return 0, 0
+        else:
+            try:
+                val = int(cost_str)
+                return val, val
+            except ValueError:
+                return 0, 0
+
+    # --- NEW METHOD TO SUM COSTS ---
+    def _calculate_total_cost(self, regulations: List[Dict]) -> str:
+        """Sum all estimated_cost fields from a list of regulations"""
+        min_cost = 0
+        max_cost = 0
+        for reg in regulations:
+            cost_str = reg.get('estimated_cost')
+            low, high = self._parse_cost_range(cost_str)
+            min_cost += low
+            max_cost += high
+        
+        if max_cost == 0:
+            return "N/A (Costs are ongoing or part of build-out)"
+        if min_cost == max_cost:
+            return f"~₪{max_cost:,.0f} ILS"
+        # Format with commas for thousands
+        return f"₪{min_cost:,.0f} - ₪{max_cost:,.0f} ILS"
+
     def _estimate_timeline(self, business: Any, regulations: List[Dict]) -> str:
         """Estimate timeline based on complexity, aligned with sample results"""
         
         # Check for Large / High Complexity first
-        # User's "Large" example: 400 sqm, 380 seats, 27 regs
         # Key triggers: Sprinklers (REG-028), >300 seats
         has_sprinklers = any(r['id'] == 'REG-028' for r in regulations)
         if has_sprinklers or business.size_sqm > 300 or business.seating_capacity > 300:
             return "8-12 months"
 
         # Check for Medium Complexity
-        # User's "Medium" example: 85 sqm, 65 seats, 24 regs, alcohol
         # Key triggers: Fire Detection (REG-027), >50 seats
         has_fire_detection = any(r['id'] == 'REG-027' for r in regulations)
         if has_fire_detection or business.size_sqm > 50 or business.seating_capacity > 50 or 'alcohol' in business.features:
              return "4-6 months"
         
         # Default to Small / Low Complexity
-        # User's "Small" example: 40 sqm, 25 seats, 22 regs
         return "2-3 months"
     
-    def _generate_mock_report(self, business: Any, regulations: List[Dict], estimated_timeline: str) -> Dict[str, Any]:
+    def _generate_mock_report(self, business: Any, regulations: List[Dict], estimated_timeline: str, estimated_cost: str) -> Dict[str, Any]:
         """Mock report when API unavailable"""
         return {
             "summary": f"Mock report for {business.business_name}. API key not configured.",
@@ -370,16 +415,20 @@ Write the steps now:"""
                 "medium": len([r for r in regulations if r.get('priority') == 'medium']),
                 "low": len([r for r in regulations if r.get('priority') == 'low'])
             },
-            "estimated_timeline": estimated_timeline, # Use calculated timeline
+            "estimated_timeline": estimated_timeline,
+            "estimated_cost": estimated_cost,
             "ai_generated": False,
             "mock_mode": True
         }
     
-    # --- FIX 5: Update fallback to accept and use the timeline ---
-    def _generate_fallback_report(self, business: Any, regulations: List[Dict], estimated_timeline: str) -> Dict[str, Any]:
+    def _generate_fallback_report(self, business: Any, regulations: List[Dict], estimated_timeline: str, estimated_cost: str) -> Dict[str, Any]:
         """Fallback when AI fails"""
+        summary = (f"Welcome, {business.owner_name}! Your restaurant '{business.business_name}' with {business.size_sqm} sqm will need to complete "
+                   f"{len(regulations)} licensing requirements. The process typically takes {estimated_timeline} "
+                   f"with an estimated total cost of {estimated_cost}.")
+        
         return {
-            "summary": f"Welcome, {business.owner_name}! Your restaurant '{business.business_name}' with {business.size_sqm} sqm will need to complete {len(regulations)} licensing requirements. The process typically takes {estimated_timeline} with proper planning and professional help.",
+            "summary": summary,
             
             "business": {
                 "business_name": business.business_name,
@@ -419,10 +468,11 @@ Write the steps now:"""
                 "critical": len([r for r in regulations if r.get('priority') == 'critical']),
                 "high": len([r for r in regulations if r.get('priority') == 'high']),
                 "medium": len([r for r in regulations if r.get('priority') == 'medium']),
-                "low": len([r for r in regulations if r.get('priority') == 'low'])
+                "low": len([r for r in regulations if r.get('priority')_ == 'low'])
             },
             
-            "estimated_timeline": estimated_timeline, # Use calculated timeline
+            "estimated_timeline": estimated_timeline,
+            "estimated_cost": estimated_cost,
             "ai_generated": False,
             "fallback_mode": True
         }
