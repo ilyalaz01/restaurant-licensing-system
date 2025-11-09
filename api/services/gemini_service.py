@@ -42,12 +42,17 @@ class GeminiService:
         AI personalizes content but keeps clean formatting
         """
         
+        # --- FIX 1: Calculate timeline FIRST ---
+        # This calculation is now based on your sample results
+        estimated_timeline = self._estimate_timeline(business_details, matched_regulations)
+            
         if self.mock_mode:
-            return self._generate_mock_report(business_details, matched_regulations)
+            # Pass the estimated timeline even to the mock report
+            return self._generate_mock_report(business_details, matched_regulations, estimated_timeline)
         
         try:
-            # Generate personalized summary
-            summary = await self._generate_personalized_summary(business_details, matched_regulations)
+            # --- FIX 2: Pass timeline to summary generator ---
+            summary = await self._generate_personalized_summary(business_details, matched_regulations, estimated_timeline)
             
             # Enhance each regulation (preserve structure but personalize text)
             enhanced_regulations = await self._enhance_regulations(business_details, matched_regulations)
@@ -87,7 +92,7 @@ class GeminiService:
                     "low": len([r for r in matched_regulations if r.get('priority') == 'low'])
                 },
                 
-                "estimated_timeline": self._estimate_timeline(business_details, matched_regulations),
+                "estimated_timeline": estimated_timeline, # Use the calculated value
                 "ai_generated": True,
                 "ai_model": self.model_name
             }
@@ -98,14 +103,16 @@ class GeminiService:
             print(f"Error generating AI report: {e}")
             import traceback
             traceback.print_exc()
-            return self._generate_fallback_report(business_details, matched_regulations)
+            # Pass estimated_timeline to the fallback as well
+            return self._generate_fallback_report(business_details, matched_regulations, estimated_timeline)
     
-    async def _generate_personalized_summary(self, business: Any, regulations: List[Dict]) -> str:
+    async def _generate_personalized_summary(self, business: Any, regulations: List[Dict], estimated_timeline: str) -> str:
         """Generate personalized summary paragraph"""
         
         features = ", ".join(business.features) if business.features else "standard operations"
         location = getattr(business, 'location_city', 'Israel')
         
+        # --- FIX 3: Update the prompt to use the timeline variable ---
         prompt = f"""You are a helpful business licensing consultant in Israel.
 
 Write a friendly, personalized welcome message for a restaurant owner in ENGLISH.
@@ -122,7 +129,7 @@ Write 2-3 sentences that:
 1. Welcome the owner by name and mention their restaurant
 2. Acknowledge their specific situation (size, location, features)
 3. Give them confidence and explain what they need to do
-4. Mention realistic timeline (2-4 months typically)
+4. Mention their specific realistic timeline: {estimated_timeline}
 
 Use simple, encouraging language. Write in ENGLISH only.
 Do not use markdown or special formatting.
@@ -133,7 +140,8 @@ Just write the text directly."""
             return response.text.strip()
         except Exception as e:
             print(f"Summary generation failed: {e}")
-            return f"Welcome, {business.owner_name}! Based on your restaurant '{business.business_name}' with {business.size_sqm} sqm and features like {features}, you'll need to complete {len(regulations)} licensing requirements. This process typically takes 2-4 months with proper planning."
+            # Fallback summary also uses the calculated timeline
+            return f"Welcome, {business.owner_name}! Based on your restaurant '{business.business_name}' with {business.size_sqm} sqm and features like {features}, you'll need to complete {len(regulations)} licensing requirements. This process typically takes {estimated_timeline} with proper planning."
     
     async def _enhance_regulations(self, business: Any, regulations: List[Dict]) -> List[Dict]:
         """
@@ -310,27 +318,29 @@ Write the steps now:"""
                 "8. Once approved, display your business license prominently at entrance"
             ]
     
+    # --- FIX 4: New timeline logic based on your sample results ---
     def _estimate_timeline(self, business: Any, regulations: List[Dict]) -> str:
-        """Estimate timeline based on complexity"""
-        base_months = 2
+        """Estimate timeline based on complexity, aligned with sample results"""
         
-        if business.size_sqm > 150:
-            base_months += 1
-        if len(business.features) > 2:
-            base_months += 0.5
-        if len(regulations) > 10:
-            base_months += 0.5
+        # Check for Large / High Complexity first
+        # User's "Large" example: 400 sqm, 380 seats, 27 regs
+        # Key triggers: Sprinklers (REG-028), >300 seats
+        has_sprinklers = any(r['id'] == 'REG-028' for r in regulations)
+        if has_sprinklers or business.size_sqm > 300 or business.seating_capacity > 300:
+            return "8-12 months"
+
+        # Check for Medium Complexity
+        # User's "Medium" example: 85 sqm, 65 seats, 24 regs, alcohol
+        # Key triggers: Fire Detection (REG-027), >50 seats
+        has_fire_detection = any(r['id'] == 'REG-027' for r in regulations)
+        if has_fire_detection or business.size_sqm > 50 or business.seating_capacity > 50 or 'alcohol' in business.features:
+             return "4-6 months"
         
-        months = int(base_months)
-        
-        if months <= 2:
-            return "2-3 months with efficient preparation"
-        elif months <= 3:
-            return "3-4 months for standard process"
-        else:
-            return "4-6 months due to complexity"
+        # Default to Small / Low Complexity
+        # User's "Small" example: 40 sqm, 25 seats, 22 regs
+        return "2-3 months"
     
-    def _generate_mock_report(self, business: Any, regulations: List[Dict]) -> Dict[str, Any]:
+    def _generate_mock_report(self, business: Any, regulations: List[Dict], estimated_timeline: str) -> Dict[str, Any]:
         """Mock report when API unavailable"""
         return {
             "summary": f"Mock report for {business.business_name}. API key not configured.",
@@ -360,15 +370,16 @@ Write the steps now:"""
                 "medium": len([r for r in regulations if r.get('priority') == 'medium']),
                 "low": len([r for r in regulations if r.get('priority') == 'low'])
             },
-            "estimated_timeline": "2-3 months",
+            "estimated_timeline": estimated_timeline, # Use calculated timeline
             "ai_generated": False,
             "mock_mode": True
         }
     
-    def _generate_fallback_report(self, business: Any, regulations: List[Dict]) -> Dict[str, Any]:
+    # --- FIX 5: Update fallback to accept and use the timeline ---
+    def _generate_fallback_report(self, business: Any, regulations: List[Dict], estimated_timeline: str) -> Dict[str, Any]:
         """Fallback when AI fails"""
         return {
-            "summary": f"Welcome, {business.owner_name}! Your restaurant '{business.business_name}' with {business.size_sqm} sqm will need to complete {len(regulations)} licensing requirements. The process typically takes 2-4 months with proper planning and professional help.",
+            "summary": f"Welcome, {business.owner_name}! Your restaurant '{business.business_name}' with {business.size_sqm} sqm will need to complete {len(regulations)} licensing requirements. The process typically takes {estimated_timeline} with proper planning and professional help.",
             
             "business": {
                 "business_name": business.business_name,
@@ -411,7 +422,7 @@ Write the steps now:"""
                 "low": len([r for r in regulations if r.get('priority') == 'low'])
             },
             
-            "estimated_timeline": "2-4 months",
+            "estimated_timeline": estimated_timeline, # Use calculated timeline
             "ai_generated": False,
             "fallback_mode": True
         }
