@@ -8,6 +8,11 @@ An intelligent system that helps restaurant owners in Israel understand and navi
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://python.org)
 [![React](https://img.shields.io/badge/react-18.0+-blue.svg)](https://react.dev)
 
+## 🖼️ Screenshots
+![System Screenshot 3](screenshots/system3.png)
+![System Screenshot 1](screenshots/system1.png)
+![System Screenshot 2](screenshots/system2.png)
+
 ---
 
 ## 📋 PROJECT OVERVIEW
