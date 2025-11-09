@@ -57,14 +57,12 @@
 #### **Why Gemini Was Selected:**
 
 **1. Cost-Effectiveness**
+- IT IS FREE
 - Free tier: 15 requests per minute
-- Paid tier: Competitive pricing ($0.075 per 1M input tokens)
-- Significantly lower cost than GPT-4
-- Sustainable for production deployment
 
 **2. Performance Characteristics**
-- Response time: 2-3 seconds average
-- Quality: High-quality summaries and analysis
+- Response time: 10-15 seconds average (for large reports)
+- Quality: medium-quality summaries and analysis
 - Context window: 1 million tokens
 - Handles Hebrew language effectively
 
@@ -75,14 +73,9 @@
 - Reliable Google Cloud infrastructure
 
 **4. Alternatives Considered**
+- Other models cost shekels
 
-| Model | Pros | Cons | Why Not Chosen |
-|-------|------|------|----------------|
-| GPT-4 | Best quality | Expensive ($0.03/1K tokens) | Cost prohibitive for MVP |
-| GPT-3.5 | Fast, cheap | Lower quality | Gemini offers better value |
-| Claude API | Excellent quality | Limited free tier | Higher cost than Gemini |
-
-**Final Decision:** Gemini 1.5 Flash provides optimal balance of cost, speed, quality, and reliability for this application.
+**Final Decision:** Gemini 2.5 Flash provides optimal balance of cost, speed, quality, and reliability for this application (best free model).
 
 ---
 
@@ -319,20 +312,14 @@ Ensure Hebrew text is properly formatted and section order is preserved.
 - Recommended technology stack
 - Created initial project structure
 
-**Key Decisions Made:**
-- FastAPI over Flask (better async support)
-- React over Vue (larger ecosystem)
-- Firebase over PostgreSQL (easier deployment)
-- Gemini over GPT-4 (cost-effective)
-
 ### **Day 2: Implementation**
 
 **Morning: Backend Development**
-- Generated FastAPI application structure
-- Created Pydantic data models
-- Implemented matching engine logic
-- Built Gemini AI integration
-- Added Firebase service
+- Set up the initial FastAPI application structure
+- Created basic Pydantic data models and service skeletons
+- Configured API keys and environment variables for external integrations
+- Deployed the backend to Vercel and spent several hours debugging deployment issues
+- Investigated server startup errors on Vercel (backend was not launching properly)
 
 **Afternoon: Frontend Development**
 - Created React components
@@ -397,22 +384,23 @@ else:
 ### **Challenge 2: Vercel Deployment**
 
 **Problem:**
-Backend wouldn't deploy to Vercel:
-- Module import errors
-- Path issues
-- CORS problems
+Backend failed to deploy on Vercel despite multiple attempts.
+Common issues encountered:
+- Module import and path resolution errors
+- CORS misconfigurations
+- Unclear FastAPI compatibility with Vercel’s serverless environment
 
-**AI Diagnosis:**
-```
-Claude analyzed error logs:
-1. Entry point needs to be index.py (not main.py)
-2. Missing vercel.json configuration
-3. Need Mangum ASGI handler for AWS Lambda compatibility
-4. CORS origins not properly configured
-```
+**Process:**
+After numerous redeploys and configuration experiments, the backend still wouldn’t launch properly.
+At one point, Vercel even restricted further deployments due to exceeding the daily limit.
+Eventually, I decided to review the official Vercel documentation for FastAPI and let an AI assistant analyze it for potential issues.
 
-**AI Solution:**
-Generated complete vercel.json and proper FastAPI configuration. Deployment succeeded on first attempt after applying fixes.
+**Breakthrough:**
+The documentation confirmed that the error was related to how FastAPI apps should be wrapped for Vercel’s ASGI environment.
+Following those guidelines (adjusting the vercel.json and ASGI entry point) finally resolved the deployment issue.
+
+**Result:**
+Backend successfully deployed after extensive debugging and configuration adjustments.
 
 ### **Challenge 3: Hebrew Text Processing**
 
@@ -422,78 +410,6 @@ PDF extraction reversed Hebrew text (RTL issues), mixed section ordering.
 **AI Solution:**
 Used Gemini Pro for intelligent document understanding instead of raw text extraction. Gemini understood document structure and produced clean, properly ordered JSON.
 
----
-
-## AI IMPACT METRICS
-
-### **Development Velocity**
-
-**Without AI (estimated):** 3-4 weeks  
-**With AI (actual):** 3 days  
-**Speed Increase:** ~7x faster
-
-### **Code Quality Metrics**
-
-- **Architecture:** Professional, scalable design
-- **Code Style:** Consistent, well-documented
-- **Error Handling:** Comprehensive
-- **Test Coverage:** 100% on core logic
-
-### **Time Saved Per Task**
-
-| Task | Manual Estimate | With AI | Savings |
-|------|----------------|---------|---------|
-| Architecture Design | 1 day | 2 hours | 75% |
-| Backend Development | 1 week | 1 day | 85% |
-| Frontend Development | 1 week | 1 day | 85% |
-| Testing | 2 days | 4 hours | 75% |
-| Documentation | 2 days | 3 hours | 85% |
-
-**Total Time Saved:** ~2.5 weeks
-
----
-
-## LESSONS LEARNED
-
-### **Best Practices**
-
-**1. Be Specific with AI Prompts**
-- Bad: "Create a matching engine"
-- Good: "Create a matching engine that filters regulations using size_threshold >= value with AND/OR logic support"
-
-**2. Iterate on Solutions**
-- First AI output is rarely perfect
-- Refine prompts based on results
-- Test thoroughly and request improvements
-
-**3. Validate AI Outputs**
-- Always test AI-generated code
-- Verify logic against requirements
-- Check edge cases manually
-
-**4. Provide Full Context**
-- Share complete requirements
-- Include error messages
-- Explain existing architecture
-
-### **AI Limitations Encountered**
-
-**1. Initial Solutions May Be Generic**
-- First matching engine was too simple
-- Required refinement for AND/OR logic
-- Needed multiple iterations
-
-**2. Configuration Files Need Attention**
-- AI-generated vercel.json needed tweaking
-- Environment variable setup required manual verification
-- Deployment paths needed adjustment
-
-**3. Business Logic Requires Domain Knowledge**
-- AI suggested category matching initially
-- Needed guidance to implement threshold logic
-- Required understanding of regulation structure
-
----
 
 ## FUTURE AI ENHANCEMENTS
 
@@ -521,27 +437,7 @@ Used Gemini Pro for intelligent document understanding instead of raw text extra
 
 ---
 
-## CONCLUSION
-
-AI tools were essential to this project's success:
-
-**Development AI (Claude):**
-- Accelerated development by 7x
-- Maintained high code quality
-- Provided architectural guidance
-- Generated comprehensive documentation
-
-**Production AI (Gemini):**
-- Transforms legal language to business-friendly
-- Personalizes reports to each business
-- Provides actionable recommendations
-- Cost-effective and reliable
-
-The combination of AI for development and AI in production created a powerful, efficient system that would have taken significantly longer to build manually.
-
----
-
 **Document Version:** 1.0  
-**Last Updated:** November 2024  
+**Last Updated:** November 2025 
 **Development AI:** Claude (Anthropic) Sonnet 4.5  
-**Production AI:** Google Gemini 1.5 Flash
+**Production AI:** Google Gemini 2.5 Flash
